@@ -1,4 +1,4 @@
-package urlsigner 
+package urlsigner
 
 import (
   "bytes"
@@ -27,10 +27,10 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
     w.Header().Set("Content-Type", "application/json")
     w.WriteHeader(http.StatusCreated)
-    w.Write(signedURL(w))
+    w.Write(signedURL())
 }
 
-func signedURL(w http.ResponseWriter) []byte {
+func signedURL() []byte {
   account, _ := appengine.ServiceAccount(ctx)
   expire := time.Now().AddDate(1, 0, 0)
 
