@@ -1,3 +1,9 @@
+const ffmpeg     = require('fluent-ffmpeg');
+const ffmpegPath = require('ffmpeg-static').path;
+
+const storage    = require('@google-cloud/storage')();
+const datastore  = require('@google-cloud/datastore')();
+
 exports.wavToText = (event, callback) => {
   const file = event.data;
 
@@ -45,22 +51,67 @@ exports.wavToOgg = (event, callback) => {
   const file = event.data;
   if (file.size == 0) { return callback(); }
 
-  const fileID = file.name.split('-')[1].slice(0, -4);
-  const info = {
-    fileID:      fileID,
-    isConverted: true,
-  };
+  const fileNames         = file.name.split('-');
+  const lessonID          = fileNames[0];
+  const fileID            = fileNames[1].slice(0, -4);
+  const localWAVFilePath  = `/tmp/${fileID}.wav`;
+  const localOGGFilePath  = `/tmp/${fileID}.ogg`;
+  const remoteOGGFilePath = `voice/${lessonID}/${fileID}.ogg`;
 
-  recordVoiceInfo(fileID, info)
+  downloadFromStorage(file.name, localWAVFilePath)
+    .then(() => {
+      return encodeToOgg(localWAVFilePath, localOGGFilePath);
+    })
+    .then(() => {
+      return uploadToStorage(localOGGFilePath, remoteOGGFilePath);
+    })
+    .then(() => {
+      const info = {
+        fileID:      fileID,
+        isConverted: true,
+      };
+      return recordVoiceInfo(fileID, info);
+    })
     .then(() => { callback(); })
     .catch((err) => {
       console.error(err);
       callback();
     });
+
+  function downloadFromStorage(remoteFilePath, localFilePath) {
+    return storage.bucket('teraconn_raw_voice')
+      .file(remoteFilePath)
+      .download({ destination: localFilePath });
+  }
+
+  function encodeToOgg(wavFilePath, oggFilePath) {
+    return new Promise((resolve, reject) => {
+      ffmpeg(wavFilePath)
+        .setFfmpegPath(ffmpegPath)
+        .audioChannels(1)
+        .audioFrequency(16000)
+        .format('ogg')
+        .output(oggFilePath)
+        .on('end', () => { resolve(); })
+        .on('error', (err) => {
+          console.error(err);
+          reject(error);
+        })
+        .run();
+    });
+  }
+
+  function uploadToStorage(localFilePath, remoteFilePath) {
+    const bucket = storage.bucket('teraconn_material');
+    const options = {
+      destination: bucket.file(remoteFilePath),
+      resumable:   false,
+    };
+    return bucket.upload(localFilePath, options);
+  }
 }
 
 function recordVoiceInfo(fileID, info) {
-  const datastore   = require('@google-cloud/datastore')();
   const transaction = datastore.transaction();
   const key         = datastore.key(['VoiceText', fileID]);
   return transaction.run()

@@ -5,10 +5,14 @@
   "license": "MIT",
   "dependencies": {
     "@google-cloud/datastore": "^1.4.1",
-    "@google-cloud/speech": "^1.5.0"
+    "@google-cloud/speech": "^1.5.0",
+    "@google-cloud/storage": "^1.7.0",
+    "ffmpeg-static": "^2.3.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "fs": "^0.0.1-security"
   },
   "scripts": {
     "deploy_to_text": "gcloud beta functions deploy wavToText --trigger-resource teraconn_raw_voice --trigger-event google.storage.object.finalize --region asia-northeast1 --memory 128 --timeout 540",
-    "deploy_to_ogg": "gcloud beta functions deploy wavToOgg --trigger-resource teraconn_raw_voice --trigger-event google.storage.object.finalize --region asia-northeast1 --memory 256 --timeout 540"
+    "deploy_to_ogg": "gcloud beta functions deploy wavToOgg --trigger-resource teraconn_raw_voice --trigger-event google.storage.object.finalize --region asia-northeast1 --memory 128 --timeout 540"
   }
 }
