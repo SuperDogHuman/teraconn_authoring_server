@@ -8,6 +8,6 @@ handlers:
   static_files: static/favicon.ico
   upload: static/favicon.ico
 
-- url: /
+- url: /.*
   script: _go_app
   secure: always

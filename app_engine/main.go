@@ -24,7 +24,7 @@ func init() {
 }
 
 func rawVoiceSign(c echo.Context) error {
-  ctx      := c.Request().Context()
+  ctx      := appengine.NewContext(c.Request())
   fileID   := xid.New().String()
   lessonID := c.QueryParam("lesson_id")
   fileName := lessonID + "-" + fileID + ".wav"
