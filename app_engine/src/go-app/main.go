@@ -2,7 +2,9 @@ package main
 
 import (
   "lessonType"
+  "bytes"
   "context"
+  "encoding/json"
   "github.com/labstack/echo"
   "github.com/labstack/echo/middleware"
   "github.com/rs/xid"
@@ -14,8 +16,6 @@ import (
   "net/http"
   "time"
 )
-
-const bucketName = "teraconn_raw_voice"
 
 func init() {
   e := echo.New()
@@ -29,24 +29,26 @@ func init() {
   e.PUT ("/lessons/:id", updateLesson)
 
   e.GET ("/lessons/:id/materials", getLessonMaterials)
-  e.POST("/lessons/:id/materials", createLessonMaterials)
-  e.PUT ("/lessons/:id/materials", createLessonMaterials) // same function as POST
+  e.POST("/lessons/:id/materials", putLessonMaterials)
+  e.PUT ("/lessons/:id/materials", putLessonMaterials) // same function as POST
 
   http.Handle("/", e)
 }
 
 func rawVoiceSigning(c echo.Context) error {
-  ctx      := appengine.NewContext(c.Request())
-  fileID   := xid.New().String()
-  lessonID := c.QueryParam("lesson_id")
-  fileName := lessonID + "-" + fileID + ".wav"
+  ctx         := appengine.NewContext(c.Request())
+  bucketName  := "teraconn_raw_voice"
+  fileID      := xid.New().String()
+  lessonID    := c.QueryParam("lesson_id")
+  fileName    := lessonID + "-" + fileID + ".wav"
+  contentType := "audio/wav"
 
-  if err := createBlankObjectToGCS(ctx, fileName); err != nil {
+  if err := createObjectToGCS(ctx, bucketName, fileName, contentType, nil); err != nil {
     log.Errorf(ctx, err.Error())
     return c.JSON(http.StatusInternalServerError, err.Error())
   }
 
-  if signedURL, err := signedURL(ctx, fileID, fileName); err != nil {
+  if signedURL, err := signedURL(ctx, bucketName, fileID, fileName); err != nil {
     log.Errorf(ctx, err.Error())
     return c.JSON(http.StatusInternalServerError, err.Error())
   } else {
@@ -54,9 +56,14 @@ func rawVoiceSigning(c echo.Context) error {
   }
 }
 
+func voiceText(c echo.Context) error {
+  // [ids]
+  // return id, voicetext
+  return c.JSON(http.StatusOK, "")
+}
+
 func getLessons(c echo.Context) error {
   // pagination
-//  lessons := []lessonType.lesson
   return c.JSON(http.StatusOK, "")
 }
 
@@ -66,7 +73,7 @@ func getLesson(c echo.Context) error {
   lesson.ID = id
 
   ctx := appengine.NewContext(c.Request())
-  if err := fetchLessonFromGCS(ctx, lesson); err != nil {
+  if err := fetchLessonFromGCD(ctx, lesson); err != nil {
     if err == datastore.ErrNoSuchEntity {
       log.Errorf(ctx, err.Error())
       return c.JSON(http.StatusNotFound, err.Error())
@@ -86,7 +93,7 @@ func createLesson(c echo.Context) error {
   lesson.Published = time.Now()
 
   ctx := appengine.NewContext(c.Request())
-  if err := putLessonToGCS(c, ctx, lesson); err != nil {
+  if err := putLessonToGCD(c, ctx, lesson); err != nil {
     log.Errorf(ctx, err.Error())
     return c.JSON(http.StatusInternalServerError, err.Error())
   }
@@ -100,7 +107,7 @@ func updateLesson(c echo.Context) error {
   lesson.ID = id
 
   ctx := appengine.NewContext(c.Request())
-  if err := fetchLessonFromGCS(ctx, lesson); err != nil {
+  if err := fetchLessonFromGCD(ctx, lesson); err != nil {
     if err == datastore.ErrNoSuchEntity {
       log.Errorf(ctx, err.Error())
       return c.JSON(http.StatusNotFound, err.Error())
@@ -110,7 +117,7 @@ func updateLesson(c echo.Context) error {
     }
   }
 
-  if err := putLessonToGCS(c, ctx, lesson); err != nil {
+  if err := putLessonToGCD(c, ctx, lesson); err != nil {
     log.Errorf(ctx, err.Error())
     return c.JSON(http.StatusInternalServerError, err.Error())
   }
@@ -118,7 +125,7 @@ func updateLesson(c echo.Context) error {
   return c.JSON(http.StatusOK, lesson)
 }
 
-func fetchLessonFromGCS(ctx context.Context, lesson *lessonType.Lesson) error {
+func fetchLessonFromGCD(ctx context.Context, lesson *lessonType.Lesson) error {
   key := datastore.NewKey(ctx, "Lesson", lesson.ID, 0, nil)
 
   if err := datastore.Get(ctx, key, lesson); err != nil {
@@ -128,7 +135,7 @@ func fetchLessonFromGCS(ctx context.Context, lesson *lessonType.Lesson) error {
   return nil
 }
 
-func putLessonToGCS(echoCtx echo.Context, ctx context.Context, lesson *lessonType.Lesson) error {
+func putLessonToGCD(echoCtx echo.Context, ctx context.Context, lesson *lessonType.Lesson) error {
   if err := echoCtx.Bind(lesson); err != nil {
     return err
   }
@@ -150,42 +157,106 @@ func putLessonToGCS(echoCtx echo.Context, ctx context.Context, lesson *lessonTyp
 
 
 func getLessonMaterials(c echo.Context) error {
-  // using storage 
   // increment view cont in memorycache 
   // https://cloud.google.com/appengine/docs/standard/go/memcache/reference
   // https://cloud.google.com/appengine/docs/standard/go/memcache/using?hl=ja
-  id := c.Param("id")
-  return c.JSON(http.StatusOK, id)
-}
 
-func createLessonMaterials(c echo.Context) error {
-  // using storage 
-//  ctx := appengine.NewContext(c.Request())
-//  body := c.String(c.Request().Body)
-  id := "1"
-  return c.JSON(http.StatusCreated, id)
-}
+  lessonID    := c.Param("id")
+  ctx         := appengine.NewContext(c.Request())
+  bucketName  := "teraconn_material"
+  filePath    := "lesson/" + lessonID + ".json"
 
-func createBlankObjectToGCS(ctx context.Context, fileName string) error {
-  client, clientErr := storage.NewClient(ctx)
-  if clientErr != nil {
-    return clientErr
+  bytes, err := getObjectFromGCS(ctx, bucketName, filePath)
+  if err != nil {
+    log.Errorf(ctx, err.Error())
+    if err == storage.ErrObjectNotExist {
+      return c.JSON(http.StatusNotFound, err.Error())
+    } else {
+      return c.JSON(http.StatusInternalServerError, err.Error())
+    }
   }
 
-  bucket := client.Bucket(bucketName)
-  obj    := bucket.Object(fileName)
-  w      := obj.NewWriter(ctx)
+  lessonMaterial := new(lessonType.LessonMaterial)
+  if err := json.Unmarshal(bytes, lessonMaterial); err != nil {
+    log.Errorf(ctx, err.Error())
+    return c.JSON(http.StatusInternalServerError, err.Error())
+  }
 
-  w.ContentType = "audio/wav"
+  return c.JSON(http.StatusOK, lessonMaterial)
+}
 
-  if writerErr := w.Close(); writerErr != nil {
-    return clientErr
+func putLessonMaterials(c echo.Context) error {
+  lessonID       := c.Param("id")
+  ctx            := appengine.NewContext(c.Request())
+
+  // check lesson exists
+  // check current users permission
+
+  lessonMaterial := new(lessonType.LessonMaterial)
+
+  if err := c.Bind(lessonMaterial); err != nil {
+    log.Errorf(ctx, err.Error())
+    return c.JSON(http.StatusInternalServerError, err.Error())
+  }
+
+  contents, err := json.Marshal(lessonMaterial)
+  if err != nil {
+    log.Errorf(ctx, err.Error())
+    return c.JSON(http.StatusInternalServerError, err.Error())
+  }
+
+  bucketName  := "teraconn_material"
+  filePath    := "lesson/" + lessonID + ".json"
+  contentType := "application/json"
+
+  if err := createObjectToGCS(ctx, bucketName, filePath, contentType, contents); err != nil {
+    log.Errorf(ctx, err.Error())
+    return c.JSON(http.StatusInternalServerError, err.Error())
+  }
+
+  return c.JSON(http.StatusCreated, "succeed")
+}
+
+func createObjectToGCS(ctx context.Context, bucketName, filePath, contentType string, contents []byte) error {
+  client, err := storage.NewClient(ctx)
+  if err != nil { return err }
+  defer client.Close()
+
+  w := client.Bucket(bucketName).Object(filePath).NewWriter(ctx)
+  w.ContentType = contentType
+  defer w.Close()
+
+  if (len(contents) > 0) {
+    if _, err := w.Write(contents); err != nil {
+      return err
+    }
+  }
+
+  if err := w.Close(); err != nil {
+    return err
   }
 
   return nil
 }
 
-func signedURL(ctx context.Context, fileID string, fileName string) (RawWavSign, error) {
+func getObjectFromGCS(ctx context.Context, bucketName, filePath string) ([]byte, error) {
+  client, err := storage.NewClient(ctx)
+  if err != nil { return nil, err }
+  defer client.Close()
+
+  r, err := client.Bucket(bucketName).Object(filePath).NewReader(ctx)
+  if err != nil { return nil, err }
+  defer r.Close()
+
+  var buffer bytes.Buffer
+  if _, err := buffer.ReadFrom(r); err != nil {
+      return nil, err
+  }
+
+  return buffer.Bytes(), nil
+}
+
+func signedURL(ctx context.Context, bucketName string, fileID string, fileName string) (RawWavSign, error) {
   account, _ := appengine.ServiceAccount(ctx)
   expire     := time.Now().AddDate(1, 0, 0)
 

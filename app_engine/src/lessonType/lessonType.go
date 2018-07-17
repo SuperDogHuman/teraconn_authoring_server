@@ -46,7 +46,7 @@ type LessonSpeech struct {
 }
 
 type LessonSpeechText struct {
-  Text      string  `json:"text"`
+  Body      string  `json:"body"`
   Position  string  `json:"position"`
   Style     string  `json:"style"`
   Size      uint8   `json:"size"`
