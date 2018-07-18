@@ -2,6 +2,10 @@ package main
 
 import (
   "lessonType"
+// "lesson"
+// "lessonMaterial"
+// "rawVoiceSigning"
+//  "GCSHelper"
   "bytes"
   "context"
   "encoding/json"
@@ -20,6 +24,7 @@ import (
 func init() {
   e := echo.New()
   e.Pre(middleware.RemoveTrailingSlash())
+  e.Use(middleware.CORS())
 
   e.GET("/raw_voice_signing", rawVoiceSigning)
 
@@ -150,12 +155,6 @@ func putLessonToGCD(echoCtx echo.Context, ctx context.Context, lesson *lessonTyp
   return nil
 }
 
-
-
-// should separate file
-
-
-
 func getLessonMaterials(c echo.Context) error {
   // increment view cont in memorycache 
   // https://cloud.google.com/appengine/docs/standard/go/memcache/reference
@@ -188,10 +187,6 @@ func getLessonMaterials(c echo.Context) error {
 func putLessonMaterials(c echo.Context) error {
   lessonID       := c.Param("id")
   ctx            := appengine.NewContext(c.Request())
-
-  // check lesson exists
-  // check current users permission
-
   lessonMaterial := new(lessonType.LessonMaterial)
 
   if err := c.Bind(lessonMaterial); err != nil {
@@ -267,6 +262,7 @@ func signedURL(ctx context.Context, bucketName string, fileID string, fileName s
       return signedBytes, err
 	  },
     Method: "PUT",
+    ContentType: "audio/wav",
     Expires: expire,
   })
 
