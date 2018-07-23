@@ -6,7 +6,7 @@ type Lesson struct {
 	ID           string    `json:"id" datastore:"-"`
 	Title        string    `json:"title"`
 	Description  string    `json:"description"`
-	DurationMSec int32     `json:"duration_msec"`
+	DurationSec  float64   `json:"duration_sec"`
 	ViewCount    int64     `json:"view_count"`
 	ThumbnailURL string    `json:"thumbnail_url"`
 	GraphicIDs   []string  `json:"graphic_ids"`
@@ -30,7 +30,7 @@ type Graphic struct {
 /* The following structs is for json.Unmarshall */
 
 type LessonMaterial struct {
-	DurationMSec uint32             `json:"duration_msec"`
+  DurationSec  float64            `json:"durationSec"`
 	Timelines    []LessonTimeline   `json:"timelines"`
 	Poses        []LessonAvatarPose `json:"poses"`
 	Published    time.Time          `json:"published"`
@@ -38,51 +38,51 @@ type LessonMaterial struct {
 }
 
 type LessonTimeline struct {
-	TimeMSec uint32                    `json:"time_msec"`
+	TimeSec  float64                   `json:"timeSec"`
 	Text     LessonText                `json:"text"`
 	Voice    LessonVoice               `json:"voice"`
 	Graphic  []LessonGraphic           `json:"graphics"`
-	SPAction LessonAvatarSpecialAction `json:"sp_action"`
+	SPAction LessonAvatarSpecialAction `json:"spAction"`
 }
 
 type LessonText struct {
-	DurationMSec uint32 `json:"duration_msec"`
-	DelayMSec    uint32 `json:"delay_msec"`
-	Text         string `json:"text"`
-	Position     string `json:"position"`
-	Style        string `json:"style"`
-	Size         uint8  `json:"size"`
-	Color        string `json:"color"`
+	DurationSec  float64 `json:"durationSec"`
+	DelaySec     float64 `json:"delaySec"`
+	Text         string  `json:"text"`
+	Position     string  `json:"position"`
+	Style        string  `json:"style"`
+	Size         uint8   `json:"size"`
+	Color        string  `json:"color"`
 }
 
 type LessonVoice struct {
-	FileID       string `json:"file_id"`
-	DurationMSec uint32 `json:"duration_msec"`
-	DelayMSec    uint32 `json:"delay_msec"`
+	FileID      string  `json:"fileID"`
+	DurationSec float64 `json:"durationSec"`
+	DelaySec    float64 `json:"delaySec"`
 }
 
 type LessonGraphic struct {
-	DelayMSec uint32 `json:"delay_msec"`
-	GraphicID string `json:"graphic_id"`
-	Action    string `json:"action"`
-	WidthPx   uint16 `json:"width_px"`
-	HeightPx  uint16 `json:"height_px"`
-	Position  string `json:"position"`
+	DelaySec  float64 `json:"delaySec"`
+	GraphicID string  `json:"graphicID"`
+	Action    string  `json:"action"`
+	WidthPx   uint16  `json:"widthPx"`
+	HeightPx  uint16  `json:"heightPx"`
+	Position  string  `json:"position"`
 }
 
 type LessonAvatarSpecialAction struct {
 	Action           string `json:"action"`
-	FacialExpression string `json:"facial_expression"`
+	FacialExpression string `json:"facialExpression"`
 }
 
 type LessonAvatarPose struct {
-	TimeMSec   uint32                     `json:"time_msec"`
-	LeftHand   LessonAvatarPositionVector `json:"left_hand"`
-	RightHand  LessonAvatarPositionVector `json:"right_hand"`
-	LeftElbow  LessonAvatarPositionVector `json:"left_elbow"`
-	RightElbow LessonAvatarPositionVector `json:"right_elbow"`
-	LookAt     LessonAvatarPositionVector `json:"look_at"`
-	CoreBody   LessonAvatarPositionVector `json:"core_body"`
+	TimeSec    float64                    `json:"timeSec"`
+	LeftHand   LessonAvatarPositionVector `json:"leftHand"`
+	RightHand  LessonAvatarPositionVector `json:"rightHand"`
+	LeftElbow  LessonAvatarPositionVector `json:"leftElbow"`
+	RightElbow LessonAvatarPositionVector `json:"rightElbow"`
+	LookAt     LessonAvatarPositionVector `json:"lookAt"`
+	CoreBody   LessonAvatarPositionVector `json:"coreBody"`
 }
 
 type LessonAvatarPositionVector struct {
