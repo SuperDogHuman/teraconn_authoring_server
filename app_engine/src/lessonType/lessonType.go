@@ -27,14 +27,22 @@ type Graphic struct {
 	TeamID []string `json:"owner_ids"`
 }
 
+type VoiceText struct {
+	ID          string `json:"id" datastore:"-"`
+	FileID      string `json:"file_id"`
+	LessonID    string `json:"lesson_id"`
+	Text        string `json:"text"`
+	IsConverted bool   `json:"is_converted"`
+}
+
 /* The following structs is for json.Unmarshall */
 
 type LessonMaterial struct {
-  DurationSec  float64            `json:"durationSec"`
-	Timelines    []LessonTimeline   `json:"timelines"`
-	Poses        []LessonAvatarPose `json:"poses"`
-	Published    time.Time          `json:"published"`
-	Updated      time.Time          `json:"updated"`
+	DurationSec float64            `json:"durationSec"`
+	Timelines   []LessonTimeline   `json:"timelines"`
+	Poses       []LessonAvatarPose `json:"poses"`
+	Published   time.Time          `json:"published"`
+	Updated     time.Time          `json:"updated"`
 }
 
 type LessonTimeline struct {
@@ -46,13 +54,13 @@ type LessonTimeline struct {
 }
 
 type LessonText struct {
-	DurationSec  float64 `json:"durationSec"`
-	DelaySec     float64 `json:"delaySec"`
-	Text         string  `json:"text"`
-	Position     string  `json:"position"`
-	Style        string  `json:"style"`
-	Size         uint8   `json:"size"`
-	Color        string  `json:"color"`
+	DurationSec float64 `json:"durationSec"`
+	DelaySec    float64 `json:"delaySec"`
+	Text        string  `json:"text"`
+	Position    string  `json:"position"`
+	Style       string  `json:"style"`
+	Size        uint8   `json:"size"`
+	Color       string  `json:"color"`
 }
 
 type LessonVoice struct {
