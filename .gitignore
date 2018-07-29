@@ -4,5 +4,6 @@
 */yarn-error.log
 app_engine/pkg
 app_engine/src/*
-!app_engine/src/go-app
+!app_engine/src/teraconnect-api
+!app_engine/src/teraconnect-authoring
 !app_engine/src/lessonType
