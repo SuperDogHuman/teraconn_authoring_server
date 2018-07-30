@@ -1,0 +1,6 @@
+indexes:
+
+- kind: VoiceText
+  properties:
+    - name: lessonID
+    - name: fileID
