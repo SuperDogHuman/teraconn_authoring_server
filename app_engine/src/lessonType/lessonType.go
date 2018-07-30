@@ -6,33 +6,33 @@ type Lesson struct {
 	ID           string    `json:"id" datastore:"-"`
 	Title        string    `json:"title"`
 	Description  string    `json:"description"`
-	DurationSec  float64   `json:"duration_sec"`
-	ViewCount    int64     `json:"view_count"`
-	ThumbnailURL string    `json:"thumbnail_url"`
-	GraphicIDs   []string  `json:"graphic_ids"`
+	DurationSec  float64   `json:"durationSec"`
+	ViewCount    int64     `json:"viewCount"`
+	ThumbnailURL string    `json:"thumbnailURL"`
+	GraphicIDs   []string  `json:"graphicIDs"`
 	Published    time.Time `json:"published"`
 	Updated      time.Time `json:"updated"`
 }
 
 type LessonAuthor struct {
 	ID       string `json:"id" datastore:"-"`
-	LessonID string `json:"lesson_id"`
-	UserID   string `json:"user_id"`
+	LessonID string `json:"lessonID"`
+	UserID   string `json:"userID"`
 	Role     string `json:"role"`
 }
 
 type Graphic struct {
 	ID     string   `json:"id" datastore:"-"`
-	UserID string   `json:"user_id"`
-	TeamID []string `json:"owner_ids"`
+	UserID string   `json:"userID"`
+	TeamID []string `json:"ownerIDs"`
 }
 
 type VoiceText struct {
 	ID          string `json:"id" datastore:"-"`
-	FileID      string `json:"file_id"`
-	LessonID    string `json:"lesson_id"`
+	FileID      string `json:"fileID"`
+	LessonID    string `json:"lessonId"`
 	Text        string `json:"text"`
-	IsConverted bool   `json:"is_converted"`
+	IsConverted bool   `json:"isConverted"`
 }
 
 /* The following structs is for json.Unmarshall */

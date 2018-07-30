@@ -74,6 +74,7 @@ func getVoiceTexts(c echo.Context) error {
 	id := c.Param("lesson_id")
 
 	if voiceTexts, err := fetchVoiceTextsFromGCD(ctx, id); err != nil {
+		// TODO return http status each error type
 		log.Errorf(ctx, err.Error())
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	} else {
@@ -155,7 +156,7 @@ func fetchLessonFromGCD(ctx context.Context, lesson *lessonType.Lesson) error {
 }
 
 func fetchVoiceTextsFromGCD(ctx context.Context, lessonID string) ([]lessonType.VoiceText, error) {
-	query := datastore.NewQuery("VoiceText").Filter("LessonID =", lessonID).Order("FileID")
+	query := datastore.NewQuery("VoiceText").Filter("lessonID =", lessonID).Order("fileID")
 
 	var voiceTexts []lessonType.VoiceText
 	if _, err := query.GetAll(ctx, &voiceTexts); err != nil {
