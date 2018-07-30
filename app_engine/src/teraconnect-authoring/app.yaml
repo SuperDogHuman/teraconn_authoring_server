@@ -14,9 +14,9 @@ handlers:
   upload: static/teraconnect/index.html
   secure: always
 
-- url: /(.*\.js)$
-  static_files: static/\teraconnect
-  upload: static/teraconnect/.*\.js$
+- url: /(.*\.(js|css))$
+  static_files: static/teraconnect/\1
+  upload: static/teraconnect/.*\.(js|css)$
   secure: always
 
 - url: /.*
