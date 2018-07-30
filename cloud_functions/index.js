@@ -34,9 +34,10 @@ exports.wavToText = (event, callback) => {
       const lessonID  = fileNames[0];
       const fileID    = fileNames[1].slice(0, -4);
       const info = {
-        fileID:   fileID,
-        lessonID: lessonID,
-        text:     transcription,
+        LessonID: lessonID,
+        FileID:   fileID,
+        IsTexted: true,
+        Text:     transcription,
       };
       recordVoiceInfo(fileID, info)
     })
@@ -67,8 +68,9 @@ exports.wavToOgg = (event, callback) => {
     })
     .then(() => {
       const info = {
-        fileID:      fileID,
-        isConverted: true,
+        LessonID:    lessonID,
+        FileID:      fileID,
+        IsConverted: true,
       };
       return recordVoiceInfo(fileID, info);
     })

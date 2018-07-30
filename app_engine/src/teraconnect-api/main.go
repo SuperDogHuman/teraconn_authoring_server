@@ -156,7 +156,7 @@ func fetchLessonFromGCD(ctx context.Context, lesson *lessonType.Lesson) error {
 }
 
 func fetchVoiceTextsFromGCD(ctx context.Context, lessonID string) ([]lessonType.VoiceText, error) {
-	query := datastore.NewQuery("VoiceText").Filter("lessonID =", lessonID).Order("fileID")
+	query := datastore.NewQuery("VoiceText").Filter("LessonID =", lessonID).Order("FileID")
 
 	var voiceTexts []lessonType.VoiceText
 	if _, err := query.GetAll(ctx, &voiceTexts); err != nil {

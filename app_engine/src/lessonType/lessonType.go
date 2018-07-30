@@ -28,10 +28,10 @@ type Graphic struct {
 }
 
 type VoiceText struct {
-	ID          string `json:"id" datastore:"-"`
 	FileID      string `json:"fileID"`
 	LessonID    string `json:"lessonId"`
 	Text        string `json:"text"`
+  IsTexted    bool   `json:"isTexted"`
 	IsConverted bool   `json:"isConverted"`
 }
 
