@@ -20,8 +20,8 @@ exports.wavToText = (event, callback) => {
     },
   };
 
-  const speech  = require('@google-cloud/speech');
-  const client  = new speech.v1.SpeechClient();
+  const speech = require('@google-cloud/speech');
+  const client = new speech.v1.SpeechClient();
 
   client.recognize(request)
     .then(data => {
@@ -136,7 +136,12 @@ function recordVoiceInfo(fileID, info) {
       return transaction.commit();
     })
     .catch((err) => {
-      console.error(err);
-      return transaction.rollback();
+      if (err.code == 10) {
+        console.warn("too much contention, retry after 1 second");
+        return setTimeout(recordVoiceInfo.bind(this, fileID, info), 1000);
+      } else {
+        console.error(err);
+        return transaction.rollback();
+      }
     });
 }
