@@ -30,6 +30,7 @@ func init() {
 	e.PUT("/lessons/:id/materials", lessonMaterial.Put) // same function as POST
 
 	e.GET("/avatars/:id", avatar.Get)
+	e.GET("/avatars/:id/url", avatar.URLGet)
 
 	http.Handle("/", e)
 }
