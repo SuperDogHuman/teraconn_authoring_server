@@ -13,18 +13,18 @@ import (
 )
 
 // FetchObjectFromGCD is fetch object from GCD function.
-func FetchObjectFromGCD(ctx context.Context, obj interface{}) error {
+func FetchObjectFromGCD(ctx context.Context, obj interface{}, entityName string) error {
+	objID := ""
 	switch castedObj := obj.(type) {
 	case *lessonType.Lesson:
-		key := datastore.NewKey(ctx, "Lesson", castedObj.ID, 0, nil)
-		if err := datastore.Get(ctx, key, obj); err != nil {
-			return err
-		}
+		objID = castedObj.ID
 	case *lessonType.Avatar:
-		key := datastore.NewKey(ctx, "Avatar", castedObj.ID, 0, nil)
-		if err := datastore.Get(ctx, key, obj); err != nil {
-			return err
-		}
+		objID = castedObj.ID
+	}
+
+	key := datastore.NewKey(ctx, entityName, objID, 0, nil)
+	if err := datastore.Get(ctx, key, obj); err != nil {
+		return err
 	}
 
 	return nil

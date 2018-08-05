@@ -25,7 +25,7 @@ func Get(c echo.Context) error {
 
 	lesson := new(lessonType.Lesson)
 	lesson.ID = c.Param("id")
-	if err := cloudHelper.FetchObjectFromGCD(ctx, lesson); err != nil {
+	if err := cloudHelper.FetchObjectFromGCD(ctx, lesson, "Lesson"); err != nil {
 		log.Errorf(ctx, err.Error())
 		if err == datastore.ErrNoSuchEntity {
 			return c.JSON(http.StatusNotFound, err.Error())
@@ -35,7 +35,7 @@ func Get(c echo.Context) error {
 
 	avatar := new(lessonType.Avatar)
 	avatar.ID = lesson.AvatarID
-	if err := cloudHelper.FetchObjectFromGCD(ctx, avatar); err != nil {
+	if err := cloudHelper.FetchObjectFromGCD(ctx, avatar, "Avatar"); err != nil {
 		log.Errorf(ctx, err.Error())
 		if err == datastore.ErrNoSuchEntity {
 			return c.JSON(http.StatusNotFound, err.Error())
@@ -71,7 +71,7 @@ func Update(c echo.Context) error {
 	lesson.ID = id
 
 	ctx := appengine.NewContext(c.Request())
-	if err := cloudHelper.FetchObjectFromGCD(ctx, lesson); err != nil {
+	if err := cloudHelper.FetchObjectFromGCD(ctx, lesson, "Lesson"); err != nil {
 		if err == datastore.ErrNoSuchEntity {
 			log.Errorf(ctx, err.Error())
 			return c.JSON(http.StatusNotFound, err.Error())
