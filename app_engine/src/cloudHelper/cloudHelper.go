@@ -87,11 +87,11 @@ func GetObjectFromGCS(ctx context.Context, bucketName, filePath string) ([]byte,
 }
 
 // GetGCSSignedURL is generate signed-URL for GCS object.
-func GetGCSSignedURL(ctx context.Context, bucketName string, fileID string, fileName string, method string, contentType string) (string, error) {
+func GetGCSSignedURL(ctx context.Context, bucketName string, filePath string, method string, contentType string) (string, error) {
 	account, _ := appengine.ServiceAccount(ctx)
 	expire := time.Now().AddDate(1, 0, 0)
 
-	url, signErr := storage.SignedURL(bucketName, fileName, &storage.SignedURLOptions{
+	url, signErr := storage.SignedURL(bucketName, filePath, &storage.SignedURLOptions{
 		GoogleAccessID: account,
 		SignBytes: func(b []byte) ([]byte, error) {
 			_, signedBytes, err := appengine.SignBytes(ctx, b)
