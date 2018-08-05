@@ -1,6 +1,7 @@
 package main
 
 import (
+	"avatar"
 	"lesson"
 	"lessonMaterial"
 	"net/http"
@@ -27,6 +28,8 @@ func init() {
 	e.GET("/lessons/:id/materials", lessonMaterial.Gets)
 	e.POST("/lessons/:id/materials", lessonMaterial.Put)
 	e.PUT("/lessons/:id/materials", lessonMaterial.Put) // same function as POST
+
+	e.GET("/avatars/:id", avatar.Get)
 
 	http.Handle("/", e)
 }

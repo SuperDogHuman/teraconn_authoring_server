@@ -21,19 +21,29 @@ func Gets(c echo.Context) error {
 
 // Get is get lesson function.
 func Get(c echo.Context) error {
-	id := c.Param("id")
-	lesson := new(lessonType.Lesson)
-	lesson.ID = id
-
 	ctx := appengine.NewContext(c.Request())
+
+	lesson := new(lessonType.Lesson)
+	lesson.ID = c.Param("id")
 	if err := cloudHelper.FetchObjectFromGCD(ctx, lesson); err != nil {
+		log.Errorf(ctx, err.Error())
 		if err == datastore.ErrNoSuchEntity {
-			log.Errorf(ctx, err.Error())
 			return c.JSON(http.StatusNotFound, err.Error())
 		}
-		log.Errorf(ctx, err.Error())
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
+
+	avatar := new(lessonType.Avatar)
+	avatar.ID = lesson.AvatarID
+	if err := cloudHelper.FetchObjectFromGCD(ctx, avatar); err != nil {
+		log.Errorf(ctx, err.Error())
+		if err == datastore.ErrNoSuchEntity {
+			return c.JSON(http.StatusNotFound, err.Error())
+		}
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	lesson.Avatar = *avatar
 
 	return c.JSON(http.StatusOK, lesson)
 }

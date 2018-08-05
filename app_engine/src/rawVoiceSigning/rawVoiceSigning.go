@@ -28,7 +28,7 @@ func Get(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	if signedURL, err := cloudHelper.GetGCSSignedURL(ctx, bucketName, fileID, fileName, "PUT", contentType); err != nil {
+	if signedURL, err := cloudHelper.GetGCSSignedURL(ctx, bucketName, fileName, "PUT", contentType); err != nil {
 		log.Errorf(ctx, err.Error())
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	} else {

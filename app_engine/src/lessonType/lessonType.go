@@ -4,7 +4,8 @@ import "time"
 
 type Lesson struct {
 	ID           string    `json:"id"`
-	AvatarID     string    `json:"avatarID"`
+	AvatarID     string    `json:"-"`
+	Avatar       Avatar    `json:"avatar" datastore:"-"`
 	Title        string    `json:"title"`
 	Description  string    `json:"description"`
 	DurationSec  float64   `json:"durationSec"`

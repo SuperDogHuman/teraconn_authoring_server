@@ -13,11 +13,18 @@ import (
 )
 
 // FetchObjectFromGCD is fetch object from GCD function.
-func FetchObjectFromGCD(ctx context.Context, obj *lessonType.Lesson) error {
-	key := datastore.NewKey(ctx, "Lesson", obj.ID, 0, nil)
-
-	if err := datastore.Get(ctx, key, obj); err != nil {
-		return err
+func FetchObjectFromGCD(ctx context.Context, obj interface{}) error {
+	switch castedObj := obj.(type) {
+	case *lessonType.Lesson:
+		key := datastore.NewKey(ctx, "Lesson", castedObj.ID, 0, nil)
+		if err := datastore.Get(ctx, key, obj); err != nil {
+			return err
+		}
+	case *lessonType.Avatar:
+		key := datastore.NewKey(ctx, "Avatar", castedObj.ID, 0, nil)
+		if err := datastore.Get(ctx, key, obj); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -87,11 +94,11 @@ func GetObjectFromGCS(ctx context.Context, bucketName, filePath string) ([]byte,
 }
 
 // GetGCSSignedURL is generate signed-URL for GCS object.
-func GetGCSSignedURL(ctx context.Context, bucketName string, fileID string, fileName string, method string, contentType string) (string, error) {
+func GetGCSSignedURL(ctx context.Context, bucketName string, filePath string, method string, contentType string) (string, error) {
 	account, _ := appengine.ServiceAccount(ctx)
 	expire := time.Now().AddDate(1, 0, 0)
 
-	url, signErr := storage.SignedURL(bucketName, fileName, &storage.SignedURLOptions{
+	url, signErr := storage.SignedURL(bucketName, filePath, &storage.SignedURLOptions{
 		GoogleAccessID: account,
 		SignBytes: func(b []byte) ([]byte, error) {
 			_, signedBytes, err := appengine.SignBytes(ctx, b)
