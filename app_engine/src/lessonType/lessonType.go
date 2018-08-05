@@ -3,26 +3,39 @@ package lessonType
 import "time"
 
 type Lesson struct {
-	ID           string    `json:"id" datastore:"-"`
+	ID           string    `json:"id"`
+	AvatarID     string    `json:"avatarID"`
 	Title        string    `json:"title"`
 	Description  string    `json:"description"`
 	DurationSec  float64   `json:"durationSec"`
-	ViewCount    int64     `json:"viewCount"`
-	ThumbnailURL string    `json:"thumbnailURL"`
+	ThumbnailURL string    `json:"thumbnailURL" datastore:"-"`
 	GraphicIDs   []string  `json:"graphicIDs"`
-	Published    time.Time `json:"published"`
+	ViewCount    int64     `json:"viewCount"`
+	Version      int64     `json:"version"`
+	IsPublic     bool      `json:"isPublic"`
+	Created      time.Time `json:"created"`
+	Updated      time.Time `json:"updated"`
+}
+
+type Avatar struct {
+	ID           string    `json:"id"`
+	UserID       string    `json:"userID"`
+	ThumbnailURL string    `json:"thumbnailURL" datastore:"-"`
+	Name         string    `json:"name"`
+	Version      int64     `json:"version"`
+	Created      time.Time `json:"created"`
 	Updated      time.Time `json:"updated"`
 }
 
 type LessonAuthor struct {
-	ID       string `json:"id" datastore:"-"`
+	ID       string `json:"id"`
 	LessonID string `json:"lessonID"`
 	UserID   string `json:"userID"`
 	Role     string `json:"role"`
 }
 
 type Graphic struct {
-	ID     string   `json:"id" datastore:"-"`
+	ID     string   `json:"id"`
 	UserID string   `json:"userID"`
 	TeamID []string `json:"ownerIDs"`
 }
@@ -31,7 +44,7 @@ type VoiceText struct {
 	FileID      string `json:"fileID"`
 	LessonID    string `json:"lessonId"`
 	Text        string `json:"text"`
-  IsTexted    bool   `json:"isTexted"`
+	IsTexted    bool   `json:"isTexted"`
 	IsConverted bool   `json:"isConverted"`
 }
 
@@ -55,7 +68,6 @@ type LessonTimeline struct {
 
 type LessonText struct {
 	DurationSec float64 `json:"durationSec"`
-	DelaySec    float64 `json:"delaySec"`
 	Text        string  `json:"text"`
 	Position    string  `json:"position"`
 	Style       string  `json:"style"`
@@ -66,16 +78,14 @@ type LessonText struct {
 type LessonVoice struct {
 	FileID      string  `json:"fileID"`
 	DurationSec float64 `json:"durationSec"`
-	DelaySec    float64 `json:"delaySec"`
 }
 
 type LessonGraphic struct {
-	DelaySec  float64 `json:"delaySec"`
-	GraphicID string  `json:"graphicID"`
-	Action    string  `json:"action"`
-	WidthPx   uint16  `json:"widthPx"`
-	HeightPx  uint16  `json:"heightPx"`
-	Position  string  `json:"position"`
+	GraphicID string `json:"graphicID"`
+	Action    string `json:"action"`
+	WidthPx   uint16 `json:"widthPx"`
+	HeightPx  uint16 `json:"heightPx"`
+	Position  string `json:"position"`
 }
 
 type LessonAvatarSpecialAction struct {
@@ -84,16 +94,16 @@ type LessonAvatarSpecialAction struct {
 }
 
 type LessonAvatarPose struct {
-	TimeSec    float64                    `json:"timeSec"`
-	LeftHand   LessonAvatarPositionVector `json:"leftHand"`
-	RightHand  LessonAvatarPositionVector `json:"rightHand"`
-	LeftElbow  LessonAvatarPositionVector `json:"leftElbow"`
-	RightElbow LessonAvatarPositionVector `json:"rightElbow"`
-	LookAt     LessonAvatarPositionVector `json:"lookAt"`
-	CoreBody   LessonAvatarPositionVector `json:"coreBody"`
+	TimeSec            float64      `json:"timeSec"`
+	LeftElbowAngle     float32      `json:"leftElbowAngle"`
+	RightElbowAngle    float32      `json:"rightElbowAngle"`
+	LeftShoulderAngle  float32      `json:"leftShoulderAngle"`
+	RightShoulderAngle float32      `json:"rightShoulderAngle"`
+	LookAt             LessonVector `json:"lookAt"`
+	CoreBody           LessonVector `json:"coreBody"`
 }
 
-type LessonAvatarPositionVector struct {
+type LessonVector struct {
 	X float32 `json:"x"`
 	Y float32 `json:"y"`
 	Z float32 `json:"z"`
