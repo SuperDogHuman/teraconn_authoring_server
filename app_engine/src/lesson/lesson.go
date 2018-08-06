@@ -72,11 +72,10 @@ func Update(c echo.Context) error {
 
 	ctx := appengine.NewContext(c.Request())
 	if err := cloudHelper.FetchObjectFromGCD(ctx, lesson, "Lesson"); err != nil {
+		log.Errorf(ctx, err.Error())
 		if err == datastore.ErrNoSuchEntity {
-			log.Errorf(ctx, err.Error())
 			return c.JSON(http.StatusNotFound, err.Error())
 		}
-		log.Errorf(ctx, err.Error())
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
