@@ -38,7 +38,6 @@ func URLGet(c echo.Context) error {
 
 	// TODO check avatar exist
 	filePath := "avatar/" + c.Param("id") + ".vrm"
-	//	contentType := "application/octet-stream"
 
 	signedURL, err := cloudHelper.GetGCSSignedURL(ctx, bucketName, filePath, "GET", "")
 
