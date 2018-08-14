@@ -2,6 +2,7 @@ package signedURL
 
 import (
 	"cloudHelper"
+	"encoding/json"
 	"net/http"
 
 	"github.com/labstack/echo"
@@ -13,15 +14,17 @@ const bucketName = "teraconn_material"
 
 // Gets is get signed URLs of files.
 func Gets(c echo.Context) error {
-	params := new(GetsRequestParams)
-	if err := c.Bind(params); err != nil {
+	jsonString := c.Request().Header.Get("X-Get-Params")
+	var fileRequests []FileRequest
+	if err := json.Unmarshal([]byte(jsonString), &fileRequests); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	ctx := appengine.NewContext(c.Request())
-	urlLength := len(params.FileRequests)
-	urls := make([]string, urlLength)
-	for _, fileRequest := range params.FileRequests {
+	urlsLength := len(fileRequests)
+	urls := make([]string, urlsLength)
+
+	for i, fileRequest := range fileRequests {
 		// TODO check user permission
 		// TODO check file exists
 
@@ -30,14 +33,10 @@ func Gets(c echo.Context) error {
 		if err != nil {
 			log.Errorf(ctx, err.Error())
 		}
-		urls = append(urls, signedURL)
+		urls[i] = signedURL
 	}
 
 	return c.JSON(http.StatusOK, GetsResponses{SignedURLs: urls})
-}
-
-type GetsRequestParams struct {
-	FileRequests []FileRequest `json:"file_requests"`
 }
 
 type FileRequest struct {
