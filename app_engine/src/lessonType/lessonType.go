@@ -95,13 +95,13 @@ type LessonAvatarSpecialAction struct {
 }
 
 type LessonAvatarPose struct {
-	TimeSec            float64      `json:"timeSec"`
-	LeftElbowAngle     float32      `json:"leftElbowAngle"`
-	RightElbowAngle    float32      `json:"rightElbowAngle"`
-	LeftShoulderAngle  float32      `json:"leftShoulderAngle"`
-	RightShoulderAngle float32      `json:"rightShoulderAngle"`
-	LookAt             LessonVector `json:"lookAt"`
-	CoreBody           LessonVector `json:"coreBody"`
+	TimeSec          float64      `json:"timeSec"`
+	LeftElbowRad     float32      `json:"leftElbowRad"`
+	RightElbowRad    float32      `json:"rightElbowRad"`
+	LeftShoulderRad  float32      `json:"leftShoulderRad"`
+	RightShoulderRad float32      `json:"rightShoulderRad"`
+	LookAt           LessonVector `json:"lookAt"`
+	CoreBody         LessonVector `json:"coreBody"`
 }
 
 type LessonVector struct {

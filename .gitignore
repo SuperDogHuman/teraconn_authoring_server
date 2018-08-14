@@ -10,7 +10,7 @@ app_engine/src/teraconnect-authoring/static/teraconnect
 !app_engine/src/lessonType
 !app_engine/src/lesson
 !app_engine/src/lessonMaterial
-!app_engine/src/avatar
+!app_engine/src/signedURL
 !app_engine/src/voiceText
 !app_engine/src/cloudHelper
 !app_engine/src/rawVoiceSigning

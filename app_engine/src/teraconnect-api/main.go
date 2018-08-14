@@ -1,11 +1,11 @@
 package main
 
 import (
-	"avatar"
 	"lesson"
 	"lessonMaterial"
 	"net/http"
 	"rawVoiceSigning"
+	"signedURL"
 	"voiceText"
 
 	"github.com/labstack/echo"
@@ -29,8 +29,7 @@ func init() {
 	e.POST("/lessons/:id/materials", lessonMaterial.Put)
 	e.PUT("/lessons/:id/materials", lessonMaterial.Put) // same function as POST
 
-	e.GET("/avatars/:id", avatar.Get)
-	e.GET("/avatars/:id/url", avatar.URLGet)
+	e.GET("/signed_urls", signedURL.Gets)
 
 	http.Handle("/", e)
 }
