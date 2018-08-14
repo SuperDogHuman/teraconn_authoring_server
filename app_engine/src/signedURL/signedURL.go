@@ -4,6 +4,7 @@ import (
 	"cloudHelper"
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/labstack/echo"
 	"google.golang.org/appengine"
@@ -28,7 +29,7 @@ func Gets(c echo.Context) error {
 		// TODO check user permission
 		// TODO check file exists
 
-		filePath := fileRequest.Entity + "/" + fileRequest.ID + "." + fileRequest.Extension
+		filePath := strings.ToLower(fileRequest.Entity) + "/" + fileRequest.ID + "." + fileRequest.Extension
 		signedURL, err := cloudHelper.GetGCSSignedURL(ctx, bucketName, filePath, "GET", "")
 		if err != nil {
 			log.Errorf(ctx, err.Error())
