@@ -1,0 +1,8 @@
+[
+    {
+      "origin": ["https://teraconnect.org", "http://localhost:1234"],
+      "responseHeader": ["Content-Type"],
+      "method": ["GET"],
+      "maxAgeSeconds": 3600
+    }
+]
