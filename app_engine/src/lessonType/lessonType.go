@@ -52,11 +52,11 @@ type VoiceText struct {
 /* The following structs is for json.Unmarshall */
 
 type LessonMaterial struct {
-	DurationSec float64            `json:"durationSec"`
-	Timelines   []LessonTimeline   `json:"timelines"`
-	Poses       []LessonAvatarPose `json:"poses"`
-	Published   time.Time          `json:"published"`
-	Updated     time.Time          `json:"updated"`
+	DurationSec float64          `json:"durationSec"`
+	Timelines   []LessonTimeline `json:"timelines"`
+	Pose        LessonAvatarPose `json:"pose"`
+	Published   time.Time        `json:"published"`
+	Updated     time.Time        `json:"updated"`
 }
 
 type LessonTimeline struct {
@@ -82,11 +82,11 @@ type LessonVoice struct {
 }
 
 type LessonGraphic struct {
-	GraphicID string `json:"graphicID"`
-	Action    string `json:"action"`
-	WidthPx   uint16 `json:"widthPx"`
-	HeightPx  uint16 `json:"heightPx"`
-	Position  string `json:"position"`
+	ID       string `json:"id"`
+	Action   string `json:"action"`
+	WidthPx  uint16 `json:"widthPx"`
+	HeightPx uint16 `json:"heightPx"`
+	Position string `json:"position"`
 }
 
 type LessonAvatarSpecialAction struct {
@@ -95,17 +95,20 @@ type LessonAvatarSpecialAction struct {
 }
 
 type LessonAvatarPose struct {
-	TimeSec          float64      `json:"timeSec"`
-	LeftElbowRad     float32      `json:"leftElbowRad"`
-	RightElbowRad    float32      `json:"rightElbowRad"`
-	LeftShoulderRad  float32      `json:"leftShoulderRad"`
-	RightShoulderRad float32      `json:"rightShoulderRad"`
-	LookAt           LessonVector `json:"lookAt"`
-	CoreBody         LessonVector `json:"coreBody"`
+	LeftElbows     []LessonRotation `json:"leftElbows"`
+	RightElbows    []LessonRotation `json:"rightElbows"`
+	LeftShoulders  []LessonRotation `json:"leftShoulders"`
+	RightShoulders []LessonRotation `json:"rightShoulders"`
+	LookAts        []LessonPosition `json:"lookAts"`
+	CoreBodies     []LessonPosition `json:"coreBodies"`
 }
 
-type LessonVector struct {
-	X float32 `json:"x"`
-	Y float32 `json:"y"`
-	Z float32 `json:"z"`
+type LessonRotation struct {
+	Rot  []float32 `json:"rot"`
+	Time float32   `json:"time"`
+}
+
+type LessonPosition struct {
+	Pos  []float32 `json:"pos"`
+	Time float32   `json:"time"`
 }
