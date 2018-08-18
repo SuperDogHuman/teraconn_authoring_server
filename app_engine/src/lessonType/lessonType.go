@@ -69,7 +69,7 @@ type LessonTimeline struct {
 
 type LessonText struct {
 	DurationSec float64 `json:"durationSec"`
-	Text        string  `json:"text"`
+	Body        string  `json:"body"`
 	Position    string  `json:"position"`
 	Style       string  `json:"style"`
 	Size        uint8   `json:"size"`
