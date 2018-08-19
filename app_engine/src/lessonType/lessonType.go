@@ -73,7 +73,8 @@ type LessonText struct {
 	Position    string  `json:"position"`
 	Style       string  `json:"style"`
 	Size        uint8   `json:"size"`
-	Color       string  `json:"color"`
+	BodyColor   string  `json:"bodyColor"`
+	BorderColor string  `json:"borderColor"`
 }
 
 type LessonVoice struct {
