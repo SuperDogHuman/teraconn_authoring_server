@@ -68,13 +68,13 @@ type LessonTimeline struct {
 }
 
 type LessonText struct {
-	DurationSec float64 `json:"durationSec"`
-	Body        string  `json:"body"`
-	Position    string  `json:"position"`
-	Style       string  `json:"style"`
-	Size        uint8   `json:"size"`
-	BodyColor   string  `json:"bodyColor"`
-	BorderColor string  `json:"borderColor"`
+	DurationSec     float64 `json:"durationSec"`
+	Body            string  `json:"body"`
+	HorizontalAlign string  `json:"horizontalAlign"`
+	VerticalAlign   string  `json:"verticalAlign"`
+	SizeVW          uint8   `json:"sizeVW"`
+	BodyColor       string  `json:"bodyColor"`
+	BorderColor     string  `json:"borderColor"`
 }
 
 type LessonVoice struct {
@@ -83,11 +83,11 @@ type LessonVoice struct {
 }
 
 type LessonGraphic struct {
-	ID       string `json:"id"`
-	Action   string `json:"action"`
-	WidthPx  uint16 `json:"widthPx"`
-	HeightPx uint16 `json:"heightPx"`
-	Position string `json:"position"`
+	ID              string `json:"id"`
+	Action          string `json:"action"`
+	SizePct         uint8  `json:"sizePct"`
+	HorizontalAlign string `json:"horizontalAlign"`
+	VerticalAlign   string `json:"verticalAlign"`
 }
 
 type LessonAvatarSpecialAction struct {
