@@ -78,7 +78,7 @@ type LessonText struct {
 }
 
 type LessonVoice struct {
-	FileID      string  `json:"fileID"`
+	ID          string  `json:"id"`
 	DurationSec float64 `json:"durationSec"`
 }
 
@@ -91,17 +91,19 @@ type LessonGraphic struct {
 }
 
 type LessonAvatarSpecialAction struct {
-	Action           string `json:"action"`
-	FacialExpression string `json:"facialExpression"`
+	Action           string         `json:"action"`
+	FacialExpression string         `json:"facialExpression"`
+	Positions        LessonPosition `json:"positions"`
 }
 
 type LessonAvatarPose struct {
+	LeftHands      []LessonRotation `json:"leftHands"`
+	RightHands     []LessonRotation `json:"rightHands"`
 	LeftElbows     []LessonRotation `json:"leftElbows"`
 	RightElbows    []LessonRotation `json:"rightElbows"`
 	LeftShoulders  []LessonRotation `json:"leftShoulders"`
 	RightShoulders []LessonRotation `json:"rightShoulders"`
-	LookAts        []LessonPosition `json:"lookAts"`
-	CoreBodies     []LessonPosition `json:"coreBodies"`
+	Necks          []LessonRotation `json:"Necks"`
 }
 
 type LessonRotation struct {
@@ -110,6 +112,7 @@ type LessonRotation struct {
 }
 
 type LessonPosition struct {
-	Pos  []float32 `json:"pos"`
-	Time float32   `json:"time"`
+	X float32 `json:"x"`
+	Y float32 `json:"y"`
+	Z float32 `json:"z"`
 }
