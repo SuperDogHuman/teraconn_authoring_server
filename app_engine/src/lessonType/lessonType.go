@@ -91,9 +91,8 @@ type LessonGraphic struct {
 }
 
 type LessonAvatarSpecialAction struct {
-	Action           string         `json:"action"`
-	FacialExpression string         `json:"facialExpression"`
-	Positions        LessonPosition `json:"positions"`
+	Action         string `json:"action"`
+	FaceExpression string `json:"faceExpression"`
 }
 
 type LessonAvatarPose struct {
@@ -103,7 +102,8 @@ type LessonAvatarPose struct {
 	RightElbows    []LessonRotation `json:"rightElbows"`
 	LeftShoulders  []LessonRotation `json:"leftShoulders"`
 	RightShoulders []LessonRotation `json:"rightShoulders"`
-	Necks          []LessonRotation `json:"Necks"`
+	Necks          []LessonRotation `json:"necks"`
+	CoreBodies     []LessonPosition `json:"coreBodies"`
 }
 
 type LessonRotation struct {
@@ -112,7 +112,6 @@ type LessonRotation struct {
 }
 
 type LessonPosition struct {
-	X float32 `json:"x"`
-	Y float32 `json:"y"`
-	Z float32 `json:"z"`
+	Rot  []float32 `json:"pos"`
+	Time float32   `json:"time"`
 }
