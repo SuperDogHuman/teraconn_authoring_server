@@ -54,7 +54,7 @@ type VoiceText struct {
 type LessonMaterial struct {
 	DurationSec float64          `json:"durationSec"`
 	Timelines   []LessonTimeline `json:"timelines"`
-	Pose        LessonAvatarPose `json:"pose"`
+	Pose        LessonAvatarPose `json:"poseKey"`
 	Published   time.Time        `json:"published"`
 	Updated     time.Time        `json:"updated"`
 }
