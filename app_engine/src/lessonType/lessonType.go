@@ -55,8 +55,6 @@ type LessonMaterial struct {
 	DurationSec float64          `json:"durationSec"`
 	Timelines   []LessonTimeline `json:"timelines"`
 	Pose        LessonAvatarPose `json:"poseKey"`
-	Published   time.Time        `json:"published"`
-	Updated     time.Time        `json:"updated"`
 }
 
 type LessonTimeline struct {
