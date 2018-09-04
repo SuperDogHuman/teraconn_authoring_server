@@ -160,10 +160,10 @@ function recordVoiceInfo(fileID, info) {
         .then((results) => {
             let entity = results[0];
             if (entity) {
-            Object.keys(info).forEach((k) => {
-                entity[k] = info[k];
-            });
-            return transaction.save({ key: key, data: entity });
+                Object.keys(info).forEach((k) => {
+                    entity[k] = info[k];
+                });
+                return transaction.save({ key: key, data: entity });
             } else {
                 entity = { key: key, data: info};
                 return transaction.save(entity);
@@ -179,6 +179,6 @@ function recordVoiceInfo(fileID, info) {
             } else {
                 console.error(err);
                 return transaction.rollback();
-        }
+            }
         });
 }
