@@ -37,7 +37,9 @@ exports.wavToText = async (data, context) => {
         IsTexted: true,
         Text:     transcription,
     };
-    recordVoiceInfo(fileID, info);
+    await recordVoiceInfo(fileID, info).catch((err) => {
+        console.error(err);
+    });
 }
 
 exports.wavTo16Khz = async (data, context) => {
@@ -150,7 +152,7 @@ function uploadToStorage(bucketName, localFilePath, remoteFilePath) {
 
 function recordVoiceInfo(fileID, info) {
     const transaction = datastore.transaction();
-    const key         = datastore.key(['VoiceText', fileID]);
+    const key         = datastore.key(['LessonVoiceText', fileID]);
     return transaction.run()
         .then((data) => {
             return transaction.get(key);
@@ -175,8 +177,8 @@ function recordVoiceInfo(fileID, info) {
                 console.warn("too much contention, retry after 1 second");
                 return setTimeout(recordVoiceInfo.bind(this, fileID, info), 1000);
             } else {
-                    console.error(err);
-                    return transaction.rollback();
-            }
+                console.error(err);
+                return transaction.rollback();
+        }
         });
 }
