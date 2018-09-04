@@ -20,6 +20,8 @@ func FetchObjectFromGCD(ctx context.Context, obj interface{}, entityName string)
 		objID = castedObj.ID
 	case *lessonType.Avatar:
 		objID = castedObj.ID
+	case *lessonType.LessonGraphic:
+		objID = castedObj.ID
 	}
 
 	key := datastore.NewKey(ctx, entityName, objID, 0, nil)
@@ -30,8 +32,8 @@ func FetchObjectFromGCD(ctx context.Context, obj interface{}, entityName string)
 	return nil
 }
 
-// PutObjectToGCD is fetch object from GCD function.
-func PutObjectToGCD(ctx context.Context, echoCtx echo.Context, obj interface{}, entityName string) error {
+// CreateObjectToGCD is create object from GCD function.
+func CreateObjectToGCD(ctx context.Context, echoCtx echo.Context, obj interface{}, entityName string) error {
 	if err := echoCtx.Bind(obj); err != nil {
 		return err
 	}
