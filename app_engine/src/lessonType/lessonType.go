@@ -41,7 +41,15 @@ type Graphic struct {
 	TeamID []string `json:"ownerIDs"`
 }
 
-type VoiceText struct {
+type LessonGraphic struct {
+	ID         string    `json:"id"`
+	LessonID   string    `json:"lessonID"`
+	GraphicIDs []string  `json:"graphicIDs"`
+	Created    time.Time `json:"created"`
+	Updated    time.Time `json:"updated"`
+}
+
+type LessonVoiceText struct {
 	FileID      string `json:"fileID"`
 	LessonID    string `json:"lessonId"`
 	Text        string `json:"text"`
@@ -59,13 +67,13 @@ type LessonMaterial struct {
 
 type LessonTimeline struct {
 	TimeSec  float64                   `json:"timeSec"`
-	Text     LessonText                `json:"text"`
-	Voice    LessonVoice               `json:"voice"`
-	Graphic  []LessonGraphic           `json:"graphics"`
+	Text     LessonMaterialText        `json:"text"`
+	Voice    LessonMaterialVoice       `json:"voice"`
+	Graphic  []LessonMaterialGraphic   `json:"graphics"`
 	SPAction LessonAvatarSpecialAction `json:"spAction"`
 }
 
-type LessonText struct {
+type LessonMaterialText struct {
 	DurationSec     float64 `json:"durationSec"`
 	Body            string  `json:"body"`
 	HorizontalAlign string  `json:"horizontalAlign"`
@@ -75,12 +83,12 @@ type LessonText struct {
 	BorderColor     string  `json:"borderColor"`
 }
 
-type LessonVoice struct {
+type LessonMaterialVoice struct {
 	ID          string  `json:"id"`
 	DurationSec float64 `json:"durationSec"`
 }
 
-type LessonGraphic struct {
+type LessonMaterialGraphic struct {
 	ID              string `json:"id"`
 	Action          string `json:"action"`
 	SizePct         uint8  `json:"sizePct"`

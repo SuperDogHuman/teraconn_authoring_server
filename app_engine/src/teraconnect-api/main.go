@@ -2,11 +2,12 @@ package main
 
 import (
 	"lesson"
+	"lessonGraphic"
 	"lessonMaterial"
+	"lessonVoiceText"
 	"net/http"
 	"rawVoiceSigning"
 	"signedURL"
-	"voiceText"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -18,7 +19,6 @@ func init() {
 	e.Use(middleware.CORS())
 
 	e.GET("/raw_voice_signing", rawVoiceSigning.Get) // TODO change request params to include url
-	e.GET("/voice_text/:lesson_id", voiceText.Gets)
 
 	e.GET("/lessons", lesson.Gets)
 	e.GET("/lessons/:id", lesson.Get)
@@ -28,6 +28,11 @@ func init() {
 	e.GET("/lessons/:id/materials", lessonMaterial.Gets)
 	e.POST("/lessons/:id/materials", lessonMaterial.Put)
 	e.PUT("/lessons/:id/materials", lessonMaterial.Put) // same function as POST
+
+	e.GET("/lessons/:id/voice_texts", lessonVoiceText.Gets)
+
+	e.GET("/lessons/:id/graphics", lessonGraphic.Gets)
+	e.POST("/lessons/:id/graphics", lessonGraphic.Create)
 
 	e.GET("/signed_urls", signedURL.Gets)
 

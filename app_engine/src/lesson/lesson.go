@@ -54,9 +54,10 @@ func Create(c echo.Context) error {
 	lesson := new(lessonType.Lesson)
 	lesson.ID = id
 	lesson.Created = time.Now()
+	lesson.Updated = lesson.Created
 
 	ctx := appengine.NewContext(c.Request())
-	if err := cloudHelper.PutObjectToGCD(ctx, c, lesson); err != nil {
+	if err := cloudHelper.PutObjectToGCD(ctx, c, lesson, "Lesson"); err != nil {
 		log.Errorf(ctx, err.Error())
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -79,7 +80,7 @@ func Update(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	if err := cloudHelper.PutObjectToGCD(ctx, c, lesson); err != nil {
+	if err := cloudHelper.PutObjectToGCD(ctx, c, lesson, "Lesson"); err != nil {
 		log.Errorf(ctx, err.Error())
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

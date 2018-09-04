@@ -31,13 +31,20 @@ func FetchObjectFromGCD(ctx context.Context, obj interface{}, entityName string)
 }
 
 // PutObjectToGCD is fetch object from GCD function.
-func PutObjectToGCD(ctx context.Context, echoCtx echo.Context, obj *lessonType.Lesson) error {
+func PutObjectToGCD(ctx context.Context, echoCtx echo.Context, obj interface{}, entityName string) error {
 	if err := echoCtx.Bind(obj); err != nil {
 		return err
 	}
 
-	key := datastore.NewKey(ctx, "Lesson", obj.ID, 0, nil)
-	obj.Updated = time.Now()
+	objID := ""
+	switch castedObj := obj.(type) {
+	case *lessonType.Lesson:
+		objID = castedObj.ID
+	case *lessonType.LessonGraphic:
+		objID = castedObj.ID
+	}
+
+	key := datastore.NewKey(ctx, entityName, objID, 0, nil)
 
 	if _, err := datastore.Put(ctx, key, obj); err != nil {
 		return err
