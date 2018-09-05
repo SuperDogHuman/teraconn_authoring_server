@@ -13,7 +13,7 @@
   },
   "scripts": {
     "deploy_to_text": "gcloud beta functions deploy wavToText --trigger-resource teraconn_voice_for_transcription --trigger-event google.storage.object.finalize --region asia-northeast1 --memory 128 --timeout 540 --runtime nodejs8",
-    "deploy_to_16k": "gcloud beta functions deploy wavTo16Khz --trigger-resource teraconn_raw_voice --trigger-event google.storage.object.finalize --region asia-northeast1 --memory 128 --timeout 540 --runtime nodejs8",
+    "deploy_to_16k": "gcloud beta functions deploy wavTo16Khz --trigger-resource teraconn_raw_voice --trigger-event google.storage.object.finalize --region asia-northeast1 --memory 256 --timeout 540 --runtime nodejs8",
     "deploy_to_ogg": "gcloud beta functions deploy wavToOgg --trigger-resource teraconn_raw_voice --trigger-event google.storage.object.finalize --region asia-northeast1 --memory 256 --timeout 540 --runtime nodejs8"
   },
   "engines": {
