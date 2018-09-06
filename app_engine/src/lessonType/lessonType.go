@@ -48,6 +48,7 @@ type Graphic struct {
 type LessonGraphic struct {
 	ID         string    `json:"id"` /* same as ID of Lesson */
 	GraphicIDs []string  `json:"graphicIDs"`
+	Graphics   []Graphic `json:"graphics" datastore:"-"`
 	Created    time.Time `json:"created"`
 	Updated    time.Time `json:"updated"`
 }
