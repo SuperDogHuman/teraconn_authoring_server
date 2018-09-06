@@ -10,7 +10,7 @@ type Lesson struct {
 	Description  string    `json:"description"`
 	DurationSec  float64   `json:"durationSec"`
 	ThumbnailURL string    `json:"thumbnailURL" datastore:"-"`
-	GraphicIDs   []string  `json:"graphicIDs"`
+	GraphicIDs   []string  `json:"graphicIDs" datastore:"-"`
 	ViewCount    int64     `json:"viewCount"`
 	Version      int64     `json:"version"`
 	IsPublic     bool      `json:"isPublic"`
@@ -36,9 +36,13 @@ type LessonAuthor struct {
 }
 
 type Graphic struct {
-	ID     string   `json:"id"`
-	UserID string   `json:"userID"`
-	TeamID []string `json:"ownerIDs"`
+	ID                string `json:"id"`
+	GraphicCategoryID string `json:"graphicCategoryID"`
+	UserID            string `json:"userID"`
+	FileType          string `json:"fileType"`
+	WidthPx           int    `json:"widthPx"`
+	HeightPx          int    `json:"heightPx"`
+	IsPublic          bool   `json:"isPublic"`
 }
 
 type LessonGraphic struct {
@@ -49,74 +53,10 @@ type LessonGraphic struct {
 }
 
 type LessonVoiceText struct {
-	FileID      string `json:"fileID"`
-	LessonID    string `json:"lessonId"`
-	Text        string `json:"text"`
-	IsTexted    bool   `json:"isTexted"`
-	IsConverted bool   `json:"isConverted"`
-}
-
-/* The following structs is for json.Unmarshall */
-
-type LessonMaterial struct {
-	DurationSec float64          `json:"durationSec"`
-	Timelines   []LessonTimeline `json:"timelines"`
-	Pose        LessonAvatarPose `json:"poseKey"`
-}
-
-type LessonTimeline struct {
-	TimeSec  float64                   `json:"timeSec"`
-	Text     LessonMaterialText        `json:"text"`
-	Voice    LessonMaterialVoice       `json:"voice"`
-	Graphic  []LessonMaterialGraphic   `json:"graphics"`
-	SPAction LessonAvatarSpecialAction `json:"spAction"`
-}
-
-type LessonMaterialText struct {
-	DurationSec     float64 `json:"durationSec"`
-	Body            string  `json:"body"`
-	HorizontalAlign string  `json:"horizontalAlign"`
-	VerticalAlign   string  `json:"verticalAlign"`
-	SizeVW          uint8   `json:"sizeVW"`
-	BodyColor       string  `json:"bodyColor"`
-	BorderColor     string  `json:"borderColor"`
-}
-
-type LessonMaterialVoice struct {
-	ID          string  `json:"id"`
+	FileID      string  `json:"fileID"`
+	LessonID    string  `json:"lessonId"`
 	DurationSec float64 `json:"durationSec"`
-}
-
-type LessonMaterialGraphic struct {
-	ID              string `json:"id"`
-	Action          string `json:"action"`
-	SizePct         uint8  `json:"sizePct"`
-	HorizontalAlign string `json:"horizontalAlign"`
-	VerticalAlign   string `json:"verticalAlign"`
-}
-
-type LessonAvatarSpecialAction struct {
-	Action         string `json:"action"`
-	FaceExpression string `json:"faceExpression"`
-}
-
-type LessonAvatarPose struct {
-	LeftHands      []LessonRotation `json:"leftHands"`
-	RightHands     []LessonRotation `json:"rightHands"`
-	LeftElbows     []LessonRotation `json:"leftElbows"`
-	RightElbows    []LessonRotation `json:"rightElbows"`
-	LeftShoulders  []LessonRotation `json:"leftShoulders"`
-	RightShoulders []LessonRotation `json:"rightShoulders"`
-	Necks          []LessonRotation `json:"necks"`
-	CoreBodies     []LessonPosition `json:"coreBodies"`
-}
-
-type LessonRotation struct {
-	Rot  []float32 `json:"rot"`
-	Time float32   `json:"time"`
-}
-
-type LessonPosition struct {
-	Rot  []float32 `json:"pos"`
-	Time float32   `json:"time"`
+	Text        string  `json:"text"`
+	IsTexted    bool    `json:"isTexted"`
+	IsConverted bool    `json:"isConverted"`
 }

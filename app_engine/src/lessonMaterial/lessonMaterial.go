@@ -9,7 +9,6 @@ import (
 	//"google.golang.org/appengine/memcache"
 	"cloudHelper"
 	"encoding/json"
-	"lessonType"
 	"net/http"
 )
 
@@ -34,7 +33,7 @@ func Gets(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	lessonMaterial := new(lessonType.LessonMaterial)
+	lessonMaterial := new(LessonMaterial)
 	if err := json.Unmarshal(bytes, lessonMaterial); err != nil {
 		log.Errorf(ctx, err.Error())
 		return c.JSON(http.StatusInternalServerError, err.Error())
@@ -47,7 +46,7 @@ func Gets(c echo.Context) error {
 func Put(c echo.Context) error {
 	lessonID := c.Param("id")
 	ctx := appengine.NewContext(c.Request())
-	lessonMaterial := new(lessonType.LessonMaterial)
+	lessonMaterial := new(LessonMaterial)
 
 	if err := c.Bind(lessonMaterial); err != nil {
 		log.Errorf(ctx, err.Error())
@@ -69,4 +68,67 @@ func Put(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, "succeed")
+}
+
+type LessonMaterial struct {
+	DurationSec float64          `json:"durationSec"`
+	Timelines   []LessonTimeline `json:"timelines"`
+	Pose        LessonAvatarPose `json:"poseKey"`
+}
+
+type LessonTimeline struct {
+	TimeSec  float64                   `json:"timeSec"`
+	Text     LessonMaterialText        `json:"text"`
+	Voice    LessonMaterialVoice       `json:"voice"`
+	Graphic  []LessonMaterialGraphic   `json:"graphics"`
+	SPAction LessonAvatarSpecialAction `json:"spAction"`
+}
+
+type LessonMaterialText struct {
+	DurationSec     float64 `json:"durationSec"`
+	Body            string  `json:"body"`
+	HorizontalAlign string  `json:"horizontalAlign"`
+	VerticalAlign   string  `json:"verticalAlign"`
+	SizeVW          uint8   `json:"sizeVW"`
+	BodyColor       string  `json:"bodyColor"`
+	BorderColor     string  `json:"borderColor"`
+}
+
+type LessonMaterialVoice struct {
+	ID          string  `json:"id"`
+	DurationSec float64 `json:"durationSec"`
+}
+
+type LessonMaterialGraphic struct {
+	ID              string `json:"id"`
+	Action          string `json:"action"`
+	SizePct         uint8  `json:"sizePct"`
+	HorizontalAlign string `json:"horizontalAlign"`
+	VerticalAlign   string `json:"verticalAlign"`
+}
+
+type LessonAvatarSpecialAction struct {
+	Action         string `json:"action"`
+	FaceExpression string `json:"faceExpression"`
+}
+
+type LessonAvatarPose struct {
+	LeftHands      []LessonRotation `json:"leftHands"`
+	RightHands     []LessonRotation `json:"rightHands"`
+	LeftElbows     []LessonRotation `json:"leftElbows"`
+	RightElbows    []LessonRotation `json:"rightElbows"`
+	LeftShoulders  []LessonRotation `json:"leftShoulders"`
+	RightShoulders []LessonRotation `json:"rightShoulders"`
+	Necks          []LessonRotation `json:"necks"`
+	CoreBodies     []LessonPosition `json:"coreBodies"`
+}
+
+type LessonRotation struct {
+	Rot  []float32 `json:"rot"`
+	Time float32   `json:"time"`
+}
+
+type LessonPosition struct {
+	Rot  []float32 `json:"pos"`
+	Time float32   `json:"time"`
 }

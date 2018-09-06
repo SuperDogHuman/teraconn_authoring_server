@@ -12,8 +12,8 @@ import (
 	"google.golang.org/appengine/datastore"
 )
 
-// FetchObjectFromGCD is fetch object from GCD function.
-func FetchObjectFromGCD(ctx context.Context, obj interface{}, entityName string) error {
+// FetchEntityFromGCD is fetch a entity from GCD function.
+func FetchEntityFromGCD(ctx context.Context, obj interface{}, entityName string) error {
 	objID := ""
 	switch castedObj := obj.(type) {
 	case *lessonType.Lesson:
@@ -32,8 +32,8 @@ func FetchObjectFromGCD(ctx context.Context, obj interface{}, entityName string)
 	return nil
 }
 
-// CreateObjectToGCD is create object from GCD function.
-func CreateObjectToGCD(ctx context.Context, echoCtx echo.Context, obj interface{}, entityName string) error {
+// CreateEntityToGCD is create object from GCD function.
+func CreateEntityToGCD(ctx context.Context, echoCtx echo.Context, obj interface{}, entityName string) error {
 	if err := echoCtx.Bind(obj); err != nil {
 		return err
 	}

@@ -4,6 +4,7 @@ import (
 	"lesson"
 	"lessonGraphic"
 	"lessonMaterial"
+	"lessonPack"
 	"lessonVoiceText"
 	"net/http"
 	"rawVoiceSigning"
@@ -33,6 +34,8 @@ func init() {
 
 	e.GET("/lessons/:id/graphics", lessonGraphic.Gets)
 	e.POST("/lessons/:id/graphics", lessonGraphic.Create)
+
+	e.PUT("/lessons/:id/packs", lessonPack.Update)
 
 	e.GET("/signed_urls", signedURL.Gets)
 

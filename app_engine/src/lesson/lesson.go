@@ -25,7 +25,7 @@ func Get(c echo.Context) error {
 
 	lesson := new(lessonType.Lesson)
 	lesson.ID = c.Param("id")
-	if err := cloudHelper.FetchObjectFromGCD(ctx, lesson, "Lesson"); err != nil {
+	if err := cloudHelper.FetchEntityFromGCD(ctx, lesson, "Lesson"); err != nil {
 		log.Errorf(ctx, err.Error())
 		if err == datastore.ErrNoSuchEntity {
 			return c.JSON(http.StatusNotFound, err.Error())
@@ -35,7 +35,7 @@ func Get(c echo.Context) error {
 
 	avatar := new(lessonType.Avatar)
 	avatar.ID = lesson.AvatarID
-	if err := cloudHelper.FetchObjectFromGCD(ctx, avatar, "Avatar"); err != nil {
+	if err := cloudHelper.FetchEntityFromGCD(ctx, avatar, "Avatar"); err != nil {
 		log.Errorf(ctx, err.Error())
 		if err == datastore.ErrNoSuchEntity {
 			return c.JSON(http.StatusNotFound, err.Error())
@@ -56,7 +56,7 @@ func Create(c echo.Context) error {
 	lesson.Created = time.Now()
 
 	ctx := appengine.NewContext(c.Request())
-	if err := cloudHelper.CreateObjectToGCD(ctx, c, lesson, "Lesson"); err != nil {
+	if err := cloudHelper.CreateEntityToGCD(ctx, c, lesson, "Lesson"); err != nil {
 		log.Errorf(ctx, err.Error())
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -72,7 +72,7 @@ func Update(c echo.Context) error {
 	lesson.Updated = time.Now()
 
 	ctx := appengine.NewContext(c.Request())
-	if err := cloudHelper.FetchObjectFromGCD(ctx, lesson, "Lesson"); err != nil {
+	if err := cloudHelper.FetchEntityFromGCD(ctx, lesson, "Lesson"); err != nil {
 		log.Errorf(ctx, err.Error())
 		if err == datastore.ErrNoSuchEntity {
 			return c.JSON(http.StatusNotFound, err.Error())
@@ -80,7 +80,7 @@ func Update(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	if err := cloudHelper.CreateObjectToGCD(ctx, c, lesson, "Lesson"); err != nil {
+	if err := cloudHelper.CreateEntityToGCD(ctx, c, lesson, "Lesson"); err != nil {
 		log.Errorf(ctx, err.Error())
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
