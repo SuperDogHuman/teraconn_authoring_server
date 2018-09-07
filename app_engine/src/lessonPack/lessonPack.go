@@ -65,10 +65,10 @@ func Update(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	//	if err = removeUsedFilesInGCS(ctx, id, lessonVoiceTexts); err != nil {
-	//		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
-	//		return c.JSON(http.StatusInternalServerError, err.Error())
-	//	}
+	if err = removeUsedFilesInGCS(ctx, id, lessonVoiceTexts); err != nil {
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
 
 	if err = updateLessonAfterPacked(ctx, id); err != nil {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
