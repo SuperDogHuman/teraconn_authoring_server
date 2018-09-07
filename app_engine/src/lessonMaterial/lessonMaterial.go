@@ -101,6 +101,7 @@ type LessonMaterialVoice struct {
 
 type LessonMaterialGraphic struct {
 	ID              string `json:"id"`
+	FileType        string `json:"fileType"`
 	Action          string `json:"action"`
 	SizePct         uint8  `json:"sizePct"`
 	HorizontalAlign string `json:"horizontalAlign"`
