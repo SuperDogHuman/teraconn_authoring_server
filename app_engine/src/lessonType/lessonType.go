@@ -55,7 +55,7 @@ type LessonGraphic struct {
 
 type LessonVoiceText struct {
 	FileID      string  `json:"fileID"`
-	LessonID    string  `json:"lessonId"`
+	LessonID    string  `json:"lessonID"`
 	DurationSec float64 `json:"durationSec"`
 	Text        string  `json:"text"`
 	IsTexted    bool    `json:"isTexted"`
