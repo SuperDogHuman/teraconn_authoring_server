@@ -55,7 +55,7 @@ func CreateEntityToGCD(ctx context.Context, echoCtx echo.Context, obj interface{
 	return nil
 }
 
-// CreateObjectToGCS is create object to GCS function.
+// CreateObjectToGCS is create object to GCS.
 func CreateObjectToGCS(ctx context.Context, bucketName, filePath, contentType string, contents []byte) error {
 	client, err := storage.NewClient(ctx)
 	if err != nil {
@@ -80,7 +80,7 @@ func CreateObjectToGCS(ctx context.Context, bucketName, filePath, contentType st
 	return nil
 }
 
-// GetObjectFromGCS is get object from GCS function.
+// GetObjectFromGCS is get object from GCS.
 func GetObjectFromGCS(ctx context.Context, bucketName, filePath string) ([]byte, error) {
 	client, err := storage.NewClient(ctx)
 	if err != nil {
@@ -123,4 +123,20 @@ func GetGCSSignedURL(ctx context.Context, bucketName string, filePath string, me
 	}
 
 	return url, nil
+}
+
+// DeleteObjectsFromGCS is delete object in GCS.
+func DeleteObjectsFromGCS(ctx context.Context, bucketName string, filePath string) error {
+	client, err := storage.NewClient(ctx)
+	if err != nil {
+		return err
+	}
+	defer client.Close()
+
+	o := client.Bucket(bucketName).Object(filePath)
+	if err := o.Delete(ctx); err != nil {
+		return err
+	}
+
+	return nil
 }

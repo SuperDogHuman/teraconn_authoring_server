@@ -65,6 +65,16 @@ func Update(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
+	//	if err = removeUsedFilesInGCS(ctx, id, lessonVoiceTexts); err != nil {
+	//		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
+	//		return c.JSON(http.StatusInternalServerError, err.Error())
+	//	}
+
+	if err = updateLessonAfterPacked(ctx, id); err != nil {
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
 	zipWriter.Close()
 
 	zipFilePath := "lesson/" + id + ".zip"
@@ -165,4 +175,40 @@ func fetchGraphicFileTypesFromGCD(ctx context.Context, graphicIDs []string) (map
 	}
 
 	return graphicFileTypes, nil
+}
+
+func removeUsedFilesInGCS(ctx context.Context, id string, voiceTexts []lessonType.LessonVoiceText) error {
+	var err error
+
+	for _, voiceText := range voiceTexts {
+		filePathInGCS := id + "-" + voiceText.FileID + ".wav"
+
+		if err = cloudHelper.DeleteObjectsFromGCS(ctx, "teraconn_raw_voice", filePathInGCS); err != nil {
+			return err
+		}
+
+		if err = cloudHelper.DeleteObjectsFromGCS(ctx, "teraconn_voice_for_transcription", filePathInGCS); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func updateLessonAfterPacked(ctx context.Context, id string) error {
+	key := datastore.NewKey(ctx, "Lesson", id, 0, nil)
+	lesson := new(lessonType.Lesson)
+	lesson.ID = id
+
+	var err error
+	if err = datastore.Get(ctx, key, lesson); err != nil {
+		return err
+	}
+
+	lesson.IsPacked = true
+	if _, err = datastore.Put(ctx, key, lesson); err != nil {
+		return err
+	}
+
+	return nil
 }
