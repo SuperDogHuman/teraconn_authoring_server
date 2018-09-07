@@ -4,7 +4,7 @@ import "time"
 
 type Lesson struct {
 	ID           string    `json:"id"`
-	AvatarID     string    `json:"-"`
+	AvatarID     string    `json:"avatarID"`
 	Avatar       Avatar    `json:"avatar" datastore:"-"`
 	Title        string    `json:"title"`
 	Description  string    `json:"description"`
@@ -13,6 +13,7 @@ type Lesson struct {
 	GraphicIDs   []string  `json:"graphicIDs" datastore:"-"`
 	ViewCount    int64     `json:"viewCount"`
 	Version      int64     `json:"version"`
+	IsPacked     bool      `json:"isPacked"`
 	IsPublic     bool      `json:"isPublic"`
 	Created      time.Time `json:"created"`
 	Updated      time.Time `json:"updated"`
