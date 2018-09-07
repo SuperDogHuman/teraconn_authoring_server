@@ -49,7 +49,7 @@ func Update(c echo.Context) error {
 	}
 
 	var lessonVoiceTexts []lessonType.LessonVoiceText
-	query := datastore.NewQuery("LessonVoiceText").Filter("ID =", id)
+	query := datastore.NewQuery("LessonVoiceText").Filter("LessonID =", id)
 	if _, err = query.GetAll(ctx, &lessonVoiceTexts); err != nil {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
@@ -104,7 +104,7 @@ func importGraphicsToZip(ctx context.Context, usedGraphicIDs []string, graphicFi
 
 func importVoiceToZip(ctx context.Context, voiceTexts []lessonType.LessonVoiceText, id string, bucketName string, zipWriter *zip.Writer) error {
 	for _, voiceText := range voiceTexts {
-		filePathInGCS := "voice/" + voiceText.FileID + ".ogg"
+		filePathInGCS := "voice/" + id + "/" + voiceText.FileID + ".ogg"
 
 		objectBytes, err := cloudHelper.GetObjectFromGCS(ctx, bucketName, filePathInGCS)
 		if err != nil {
