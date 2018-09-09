@@ -1,4 +1,4 @@
-package lessonGraphic
+package graphic
 
 import (
 	"github.com/labstack/echo"
@@ -10,7 +10,6 @@ import (
 	"cloudHelper"
 	"lessonType"
 	"net/http"
-	"time"
 	"utility"
 )
 
@@ -53,43 +52,4 @@ func Gets(c echo.Context) error {
 	lessonGraphic.Graphics = graphics
 
 	return c.JSON(http.StatusOK, lessonGraphic)
-}
-
-// Create is create lesson graphic.
-func Create(c echo.Context) error {
-	id := c.Param("id")
-	ctx := appengine.NewContext(c.Request())
-
-	ids := []string{id}
-	if !utility.IsValidXIDs(ids) {
-		errMessage := "Invalid ID(s) error"
-		log.Warningf(ctx, errMessage)
-		return c.JSON(http.StatusBadRequest, errMessage)
-	}
-
-	lessonGraphic := new(lessonType.LessonGraphic)
-	lessonGraphic.ID = id // LessonGraphicID is the same as lessonID
-	lessonGraphic.Created = time.Now()
-
-	// TODO check exist entity.
-
-	var err error
-	if err = c.Bind(lessonGraphic); err != nil {
-		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
-		return c.JSON(http.StatusInternalServerError, err.Error())
-	}
-
-	if !utility.IsValidXIDs(lessonGraphic.GraphicIDs) {
-		errMessage := "Invalid ID(s) error"
-		log.Warningf(ctx, errMessage)
-		return c.JSON(http.StatusBadRequest, errMessage)
-	}
-
-	key := datastore.NewKey(ctx, "LessonGraphic", id, 0, nil)
-	if _, err = datastore.Put(ctx, key, lessonGraphic); err != nil {
-		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
-		return c.JSON(http.StatusInternalServerError, err.Error())
-	}
-
-	return c.JSON(http.StatusCreated, lessonGraphic)
 }

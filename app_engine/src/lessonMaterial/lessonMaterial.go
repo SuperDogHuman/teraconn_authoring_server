@@ -10,6 +10,7 @@ import (
 	"cloudHelper"
 	"encoding/json"
 	"net/http"
+	"utility"
 )
 
 const bucketName = "teraconn_material"
@@ -22,6 +23,14 @@ func Gets(c echo.Context) error {
 
 	lessonID := c.Param("id")
 	ctx := appengine.NewContext(c.Request())
+
+	ids := []string{lessonID}
+	if !utility.IsValidXIDs(ids) {
+		errMessage := "Invalid ID(s) error"
+		log.Warningf(ctx, errMessage)
+		return c.JSON(http.StatusBadRequest, errMessage)
+	}
+
 	filePath := "lesson/" + lessonID + ".json"
 
 	bytes, err := cloudHelper.GetObjectFromGCS(ctx, bucketName, filePath)
@@ -46,6 +55,14 @@ func Gets(c echo.Context) error {
 func Put(c echo.Context) error {
 	lessonID := c.Param("id")
 	ctx := appengine.NewContext(c.Request())
+
+	ids := []string{lessonID}
+	if !utility.IsValidXIDs(ids) {
+		errMessage := "Invalid ID(s) error"
+		log.Warningf(ctx, errMessage)
+		return c.JSON(http.StatusBadRequest, errMessage)
+	}
+
 	lessonMaterial := new(LessonMaterial)
 
 	if err := c.Bind(lessonMaterial); err != nil {

@@ -11,6 +11,7 @@ import (
 	"lessonType"
 	"net/http"
 	"time"
+	"utility"
 )
 
 // Gets is get multiple lesson function.
@@ -23,8 +24,17 @@ func Gets(c echo.Context) error {
 func Get(c echo.Context) error {
 	ctx := appengine.NewContext(c.Request())
 
+	id := c.Param("id")
+
+	ids := []string{id}
+	if !utility.IsValidXIDs(ids) {
+		errMessage := "Invalid ID(s) error"
+		log.Warningf(ctx, errMessage)
+		return c.JSON(http.StatusBadRequest, errMessage)
+	}
+
 	lesson := new(lessonType.Lesson)
-	lesson.ID = c.Param("id")
+	lesson.ID = id
 	if err := cloudHelper.FetchEntityFromGCD(ctx, lesson, "Lesson"); err != nil {
 		log.Errorf(ctx, err.Error())
 		if err == datastore.ErrNoSuchEntity {
@@ -66,12 +76,20 @@ func Create(c echo.Context) error {
 
 // Update is update lesson function.
 func Update(c echo.Context) error {
+	ctx := appengine.NewContext(c.Request())
 	id := c.Param("id")
+
+	ids := []string{id}
+	if !utility.IsValidXIDs(ids) {
+		errMessage := "Invalid ID(s) error"
+		log.Warningf(ctx, errMessage)
+		return c.JSON(http.StatusBadRequest, errMessage)
+	}
+
 	lesson := new(lessonType.Lesson)
 	lesson.ID = id
 	lesson.Updated = time.Now()
 
-	ctx := appengine.NewContext(c.Request())
 	if err := cloudHelper.FetchEntityFromGCD(ctx, lesson, "Lesson"); err != nil {
 		log.Errorf(ctx, err.Error())
 		if err == datastore.ErrNoSuchEntity {

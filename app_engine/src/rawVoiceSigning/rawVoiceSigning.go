@@ -1,13 +1,14 @@
 package rawVoiceSigning
 
 import (
-	"cloudHelper"
-	"net/http"
-
 	"github.com/labstack/echo"
 	"github.com/rs/xid"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
+
+	"cloudHelper"
+	"net/http"
+	"utility"
 )
 
 // Get is get signing of raw voice files function.
@@ -18,6 +19,14 @@ func Get(c echo.Context) error {
 	}
 
 	ctx := appengine.NewContext(c.Request())
+
+	ids := []string{lessonID}
+	if !utility.IsValidXIDs(ids) {
+		errMessage := "Invalid ID(s) error"
+		log.Warningf(ctx, errMessage)
+		return c.JSON(http.StatusBadRequest, errMessage)
+	}
+
 	bucketName := "teraconn_raw_voice"
 	fileID := xid.New().String()
 	fileName := lessonID + "-" + fileID + ".wav"

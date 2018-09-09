@@ -1,6 +1,7 @@
 package main
 
 import (
+	"graphic"
 	"lesson"
 	"lessonGraphic"
 	"lessonMaterial"
@@ -20,6 +21,8 @@ func init() {
 	e.Use(middleware.CORS())
 
 	e.GET("/raw_voice_signing", rawVoiceSigning.Get) // TODO change request params to include url
+
+	e.GET("/graphics", graphic.Gets)
 
 	e.GET("/lessons", lesson.Gets)
 	e.GET("/lessons/:id", lesson.Get)
