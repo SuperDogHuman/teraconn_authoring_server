@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"cloud.google.com/go/storage"
-	"github.com/labstack/echo"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
 )
@@ -26,29 +25,6 @@ func FetchEntityFromGCD(ctx context.Context, obj interface{}, entityName string)
 
 	key := datastore.NewKey(ctx, entityName, objID, 0, nil)
 	if err := datastore.Get(ctx, key, obj); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// CreateEntityToGCD is create object from GCD function.
-func CreateEntityToGCD(ctx context.Context, echoCtx echo.Context, obj interface{}, entityName string) error {
-	if err := echoCtx.Bind(obj); err != nil {
-		return err
-	}
-
-	objID := ""
-	switch castedObj := obj.(type) {
-	case *lessonType.Lesson:
-		objID = castedObj.ID
-	case *lessonType.LessonGraphic:
-		objID = castedObj.ID
-	}
-
-	key := datastore.NewKey(ctx, entityName, objID, 0, nil)
-
-	if _, err := datastore.Put(ctx, key, obj); err != nil {
 		return err
 	}
 

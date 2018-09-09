@@ -65,8 +65,15 @@ func Create(c echo.Context) error {
 	lesson.ID = id
 	lesson.Created = time.Now()
 
+	var err error
 	ctx := appengine.NewContext(c.Request())
-	if err := cloudHelper.CreateEntityToGCD(ctx, c, lesson, "Lesson"); err != nil {
+	if err = c.Bind(lesson); err != nil {
+		log.Errorf(ctx, err.Error())
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	key := datastore.NewKey(ctx, "Lesson", id, 0, nil)
+	if _, err = datastore.Put(ctx, key, lesson); err != nil {
 		log.Errorf(ctx, err.Error())
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
