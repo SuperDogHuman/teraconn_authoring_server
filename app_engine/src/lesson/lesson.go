@@ -97,7 +97,9 @@ func Update(c echo.Context) error {
 	lesson.ID = id
 	lesson.Updated = time.Now()
 
-	if err := cloudHelper.FetchEntityFromGCD(ctx, lesson, "Lesson"); err != nil {
+	var err error
+
+	if err = cloudHelper.FetchEntityFromGCD(ctx, lesson, "Lesson"); err != nil {
 		log.Errorf(ctx, err.Error())
 		if err == datastore.ErrNoSuchEntity {
 			return c.JSON(http.StatusNotFound, err.Error())
@@ -105,7 +107,13 @@ func Update(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	if err := cloudHelper.CreateEntityToGCD(ctx, c, lesson, "Lesson"); err != nil {
+	if err = c.Bind(lesson); err != nil {
+		log.Errorf(ctx, err.Error())
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	key := datastore.NewKey(ctx, "Lesson", id, 0, nil)
+	if _, err = datastore.Put(ctx, key, lesson); err != nil {
 		log.Errorf(ctx, err.Error())
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
