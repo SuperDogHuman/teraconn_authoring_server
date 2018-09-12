@@ -27,7 +27,7 @@ func init() {
 	e.GET("/lessons", lesson.Gets)
 	e.GET("/lessons/:id", lesson.Get)
 	e.POST("/lessons", lesson.Create)
-	e.PUT("/lessons/:id", lesson.Update)
+	e.PATCH("/lessons/:id", lesson.Update)
 
 	e.GET("/lessons/:id/materials", lessonMaterial.Gets)
 	e.POST("/lessons/:id/materials", lessonMaterial.Put)

@@ -10,11 +10,13 @@ type Lesson struct {
 	Description  string    `json:"description"`
 	DurationSec  float64   `json:"durationSec"`
 	ThumbnailURL string    `json:"thumbnailURL" datastore:"-"`
-	GraphicIDs   []string  `json:"graphicIDs" datastore:"-"`
+	GraphicIDs   []string  `json:"graphicIDs"`
+	Graphics     []Graphic `json:"graphics" datastore:"-"`
 	ViewCount    int64     `json:"viewCount"`
 	Version      int64     `json:"version"`
 	IsPacked     bool      `json:"isPacked"`
 	IsPublic     bool      `json:"isPublic"`
+	UserID       string    `json:"userID"`
 	Created      time.Time `json:"created"`
 	Updated      time.Time `json:"updated"`
 }

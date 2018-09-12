@@ -1,13 +1,20 @@
 package lesson
 
 import (
+	"context"
+	"reflect"
+	"strings"
+
 	"github.com/labstack/echo"
+	"github.com/pkg/errors"
 	"github.com/rs/xid"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/log"
 
-	"cloudHelper"
+	"bytes"
+	"encoding/json"
+	"io"
 	"lessonType"
 	"net/http"
 	"time"
@@ -33,10 +40,13 @@ func Get(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, errMessage)
 	}
 
+	var err error
+
 	lesson := new(lessonType.Lesson)
 	lesson.ID = id
-	if err := cloudHelper.FetchEntityFromGCD(ctx, lesson, "Lesson"); err != nil {
-		log.Errorf(ctx, err.Error())
+	lessonKey := datastore.NewKey(ctx, "Lesson", lesson.ID, 0, nil)
+	if err = datastore.Get(ctx, lessonKey, lesson); err != nil {
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		if err == datastore.ErrNoSuchEntity {
 			return c.JSON(http.StatusNotFound, err.Error())
 		}
@@ -45,15 +55,27 @@ func Get(c echo.Context) error {
 
 	avatar := new(lessonType.Avatar)
 	avatar.ID = lesson.AvatarID
-	if err := cloudHelper.FetchEntityFromGCD(ctx, avatar, "Avatar"); err != nil {
-		log.Errorf(ctx, err.Error())
+	avatarKey := datastore.NewKey(ctx, "Avatar", avatar.ID, 0, nil)
+	if err = datastore.Get(ctx, avatarKey, avatar); err != nil {
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		if err == datastore.ErrNoSuchEntity {
 			return c.JSON(http.StatusNotFound, err.Error())
 		}
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-
 	lesson.Avatar = *avatar
+
+	var graphicKeys []*datastore.Key
+	for _, id := range lesson.GraphicIDs {
+		graphicKeys = append(graphicKeys, datastore.NewKey(ctx, "Graphic", id, 0, nil))
+	}
+	graphicCount := len(lesson.GraphicIDs)
+	graphics := make([]lessonType.Graphic, graphicCount)
+	if err = datastore.GetMulti(ctx, graphicKeys, graphics); err != nil {
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	lesson.Graphics = graphics
 
 	return c.JSON(http.StatusOK, lesson)
 }
@@ -68,13 +90,13 @@ func Create(c echo.Context) error {
 	var err error
 	ctx := appengine.NewContext(c.Request())
 	if err = c.Bind(lesson); err != nil {
-		log.Errorf(ctx, err.Error())
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	key := datastore.NewKey(ctx, "Lesson", id, 0, nil)
+	key := datastore.NewKey(ctx, "Lesson", lesson.ID, 0, nil)
 	if _, err = datastore.Put(ctx, key, lesson); err != nil {
-		log.Errorf(ctx, err.Error())
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
@@ -93,28 +115,35 @@ func Update(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, errMessage)
 	}
 
+	buf := new(bytes.Buffer)
+	io.Copy(buf, c.Request().Body)
+	var f interface{}
+	if err := json.Unmarshal(buf.Bytes(), &f); err != nil {
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
 	lesson := new(lessonType.Lesson)
-	lesson.ID = id
 	lesson.Updated = time.Now()
-
-	var err error
-
-	if err = cloudHelper.FetchEntityFromGCD(ctx, lesson, "Lesson"); err != nil {
-		log.Errorf(ctx, err.Error())
-		if err == datastore.ErrNoSuchEntity {
-			return c.JSON(http.StatusNotFound, err.Error())
+	lessonKey := datastore.NewKey(ctx, "Lesson", id, 0, nil)
+	err := datastore.RunInTransaction(ctx, func(ctx context.Context) error {
+		if err := datastore.Get(ctx, lessonKey, lesson); err != nil {
+			return err
 		}
-		return c.JSON(http.StatusInternalServerError, err.Error())
-	}
 
-	if err = c.Bind(lesson); err != nil {
-		log.Errorf(ctx, err.Error())
-		return c.JSON(http.StatusInternalServerError, err.Error())
-	}
+		newLesson := f.(map[string]interface{})
+		mutable := reflect.ValueOf(lesson).Elem()
+		for k, v := range newLesson {
+			structKey := strings.Title(k)
+			mutable.FieldByName(structKey).Set(reflect.ValueOf(v))
+		}
 
-	key := datastore.NewKey(ctx, "Lesson", id, 0, nil)
-	if _, err = datastore.Put(ctx, key, lesson); err != nil {
-		log.Errorf(ctx, err.Error())
+		_, err := datastore.Put(ctx, lessonKey, lesson)
+		return err
+	}, nil)
+
+	if err != nil {
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
