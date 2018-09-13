@@ -10,7 +10,6 @@ app_engine/src/teraconnect-authoring/static/teraconnect
 !app_engine/src/teraconnect-api
 !app_engine/src/teraconnect-authoring
 !app_engine/src/lesson
-!app_engine/src/lessonGraphic
 !app_engine/src/lessonMaterial
 !app_engine/src/lessonPack
 !app_engine/src/lessonType
