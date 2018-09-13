@@ -43,8 +43,7 @@ func Get(c echo.Context) error {
 	var err error
 
 	lesson := new(lessonType.Lesson)
-	lesson.ID = id
-	lessonKey := datastore.NewKey(ctx, "Lesson", lesson.ID, 0, nil)
+	lessonKey := datastore.NewKey(ctx, "Lesson", id, 0, nil)
 	if err = datastore.Get(ctx, lessonKey, lesson); err != nil {
 		if err == datastore.ErrNoSuchEntity {
 			log.Warningf(ctx, "%+v\n", errors.WithStack(err))
@@ -55,8 +54,7 @@ func Get(c echo.Context) error {
 	}
 
 	avatar := new(lessonType.Avatar)
-	avatar.ID = lesson.AvatarID
-	avatarKey := datastore.NewKey(ctx, "Avatar", avatar.ID, 0, nil)
+	avatarKey := datastore.NewKey(ctx, "Avatar", lesson.AvatarID, 0, nil)
 	if err = datastore.Get(ctx, avatarKey, avatar); err != nil {
 		if err == datastore.ErrNoSuchEntity {
 			log.Warningf(ctx, "%+v\n", errors.WithStack(err))
@@ -86,7 +84,6 @@ func Get(c echo.Context) error {
 func Create(c echo.Context) error {
 	id := xid.New().String()
 	lesson := new(lessonType.Lesson)
-	lesson.ID = id
 	lesson.Created = time.Now()
 
 	var err error
@@ -96,7 +93,7 @@ func Create(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	key := datastore.NewKey(ctx, "Lesson", lesson.ID, 0, nil)
+	key := datastore.NewKey(ctx, "Lesson", id, 0, nil)
 	if _, err = datastore.Put(ctx, key, lesson); err != nil {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
