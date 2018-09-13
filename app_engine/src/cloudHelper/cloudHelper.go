@@ -3,33 +3,11 @@ package cloudHelper
 import (
 	"bytes"
 	"context"
-	"lessonType"
 	"time"
 
 	"cloud.google.com/go/storage"
 	"google.golang.org/appengine"
-	"google.golang.org/appengine/datastore"
 )
-
-// FetchEntityFromGCD is fetch a entity from GCD function.
-func FetchEntityFromGCD(ctx context.Context, obj interface{}, entityName string) error {
-	objID := ""
-	switch castedObj := obj.(type) {
-	case *lessonType.Lesson:
-		objID = castedObj.ID
-	case *lessonType.Avatar:
-		objID = castedObj.ID
-	case *lessonType.LessonGraphic:
-		objID = castedObj.ID
-	}
-
-	key := datastore.NewKey(ctx, entityName, objID, 0, nil)
-	if err := datastore.Get(ctx, key, obj); err != nil {
-		return err
-	}
-
-	return nil
-}
 
 // CreateObjectToGCS is create object to GCS.
 func CreateObjectToGCS(ctx context.Context, bucketName, filePath, contentType string, contents []byte) error {

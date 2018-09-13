@@ -3,13 +3,12 @@ package main
 import (
 	"graphic"
 	"lesson"
-	"lessonGraphic"
 	"lessonMaterial"
 	"lessonPack"
 	"lessonVoiceText"
 	"net/http"
-	"rawVoiceSigning"
-	"signedURL"
+	"rawVoice"
+	"storageObject"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -19,8 +18,6 @@ func init() {
 	e := echo.New()
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.CORS())
-
-	e.GET("/raw_voice_signing", rawVoiceSigning.Get) // TODO change request params to include url
 
 	e.GET("/graphics", graphic.Gets)
 
@@ -35,12 +32,12 @@ func init() {
 
 	e.GET("/lessons/:id/voice_texts", lessonVoiceText.Gets)
 
-	e.GET("/lessons/:id/graphics", lessonGraphic.Gets)
-	e.POST("/lessons/:id/graphics", lessonGraphic.Create)
-
 	e.PUT("/lessons/:id/packs", lessonPack.Update)
 
-	e.GET("/signed_urls", signedURL.Gets)
+	e.GET("/storage_objects", storageObject.Gets)
+	e.POST("/storage_objects", storageObject.Posts)
+
+	e.POST("/raw_voices", rawVoice.Post)
 
 	http.Handle("/", e)
 }

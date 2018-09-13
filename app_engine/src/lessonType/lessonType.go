@@ -40,20 +40,13 @@ type LessonAuthor struct {
 
 type Graphic struct {
 	ID                string `json:"id"`
+	URL               string `json:"url" datastore:"-"`
 	GraphicCategoryID string `json:"graphicCategoryID"`
 	UserID            string `json:"userID"`
 	FileType          string `json:"fileType"`
 	WidthPx           int    `json:"widthPx"`
 	HeightPx          int    `json:"heightPx"`
 	IsPublic          bool   `json:"isPublic"`
-}
-
-type LessonGraphic struct {
-	ID         string    `json:"id"` /* same as ID of Lesson */
-	GraphicIDs []string  `json:"graphicIDs"`
-	Graphics   []Graphic `json:"graphics" datastore:"-"`
-	Created    time.Time `json:"created"`
-	Updated    time.Time `json:"updated"`
 }
 
 type LessonVoiceText struct {

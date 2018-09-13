@@ -18,6 +18,8 @@ import (
 	"utility"
 )
 
+const bucketName = "teraconn_material"
+
 // Update is update lesson function.
 func Update(c echo.Context) error {
 	ctx := appengine.NewContext(c.Request())
@@ -30,28 +32,26 @@ func Update(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, errMessage)
 	}
 
-	bucketName := "teraconn_material"
-
 	zipBuffer := new(bytes.Buffer)
 	zipWriter := zip.NewWriter(zipBuffer)
 
 	var err error
 
-	lessonGraphic := new(lessonType.LessonGraphic)
-	lessonGraphic.ID = id
-	key := datastore.NewKey(ctx, "LessonGraphic", id, 0, nil)
-	if err = datastore.Get(ctx, key, lessonGraphic); err != nil && err != datastore.ErrNoSuchEntity {
+	lesson := new(lessonType.Lesson)
+	lesson.ID = id
+	key := datastore.NewKey(ctx, "Lesson", id, 0, nil)
+	if err = datastore.Get(ctx, key, lesson); err != nil && err != datastore.ErrNoSuchEntity {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	var graphicFileTypes map[string]string
-	if graphicFileTypes, err = fetchGraphicFileTypesFromGCD(ctx, lessonGraphic.GraphicIDs); err != nil {
+	if graphicFileTypes, err = fetchGraphicFileTypesFromGCD(ctx, lesson.GraphicIDs); err != nil {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	if err = importGraphicsToZip(ctx, lessonGraphic.GraphicIDs, graphicFileTypes, bucketName, zipWriter); err != nil {
+	if err = importGraphicsToZip(ctx, lesson.GraphicIDs, graphicFileTypes, zipWriter); err != nil {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -63,12 +63,12 @@ func Update(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	if err = importVoiceToZip(ctx, lessonVoiceTexts, id, bucketName, zipWriter); err != nil {
+	if err = importVoiceToZip(ctx, lessonVoiceTexts, id, zipWriter); err != nil {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	if err = importLessonJsonToZip(ctx, id, bucketName, zipWriter); err != nil {
+	if err = importLessonJsonToZip(ctx, id, zipWriter); err != nil {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -95,7 +95,7 @@ func Update(c echo.Context) error {
 	return c.JSON(http.StatusCreated, "success")
 }
 
-func importGraphicsToZip(ctx context.Context, usedGraphicIDs []string, graphicFileTypes map[string]string, bucketName string, zipWriter *zip.Writer) error {
+func importGraphicsToZip(ctx context.Context, usedGraphicIDs []string, graphicFileTypes map[string]string, zipWriter *zip.Writer) error {
 	for _, graphicID := range usedGraphicIDs {
 		fileType := graphicFileTypes[graphicID]
 		filePathInGCS := "graphic/" + graphicID + "." + fileType
@@ -120,7 +120,7 @@ func importGraphicsToZip(ctx context.Context, usedGraphicIDs []string, graphicFi
 	return nil
 }
 
-func importVoiceToZip(ctx context.Context, voiceTexts []lessonType.LessonVoiceText, id string, bucketName string, zipWriter *zip.Writer) error {
+func importVoiceToZip(ctx context.Context, voiceTexts []lessonType.LessonVoiceText, id string, zipWriter *zip.Writer) error {
 	for _, voiceText := range voiceTexts {
 		filePathInGCS := "voice/" + id + "/" + voiceText.FileID + ".ogg"
 
@@ -144,7 +144,7 @@ func importVoiceToZip(ctx context.Context, voiceTexts []lessonType.LessonVoiceTe
 	return nil
 }
 
-func importLessonJsonToZip(ctx context.Context, id string, bucketName string, zipWriter *zip.Writer) error {
+func importLessonJsonToZip(ctx context.Context, id string, zipWriter *zip.Writer) error {
 	filePathInGCS := "lesson/" + id + ".json"
 	jsonBytes, err := cloudHelper.GetObjectFromGCS(ctx, bucketName, filePathInGCS)
 	if err != nil {
