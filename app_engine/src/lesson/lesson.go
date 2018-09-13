@@ -52,6 +52,7 @@ func Get(c echo.Context) error {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
+	lesson.ID = id // for json field
 
 	avatar := new(lessonType.Avatar)
 	avatar.ID = lesson.AvatarID
