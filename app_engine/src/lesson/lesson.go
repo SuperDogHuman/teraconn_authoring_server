@@ -131,16 +131,32 @@ func Update(c echo.Context) error {
 			return err
 		}
 
-		newLesson := f.(map[string]interface{})
+		updateLesson := f.(map[string]interface{})
 		mutable := reflect.ValueOf(lesson).Elem()
-		for k, v := range newLesson {
-			structKey := strings.Title(k)
-			mutable.FieldByName(structKey).Set(reflect.ValueOf(v))
+		for key, lessonField := range updateLesson {
+			structKey := strings.Title(key)
+			switch v := lessonField.(type) {
+			case []interface{}:
+				length := len(v)
+				array := make([]string, length) // TODO support another types. reflect.TypeOf(v[0])
+				mutable.FieldByName(structKey).Set(reflect.ValueOf(array))
+				for i := range v {
+					mutable.FieldByName(structKey).Index(i).Set(reflect.ValueOf(v[i]))
+				}
+			default:
+				mutable.FieldByName(structKey).Set(reflect.ValueOf(v))
+			}
 		}
 
 		_, err := datastore.Put(ctx, lessonKey, lesson)
 		return err
 	}, nil)
+
+	if !utility.IsValidXIDs(lesson.GraphicIDs) {
+		errMessage := "Invalid ID(s) error"
+		log.Warningf(ctx, errMessage)
+		return c.JSON(http.StatusBadRequest, errMessage)
+	}
 
 	if err != nil {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
