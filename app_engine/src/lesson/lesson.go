@@ -46,10 +46,11 @@ func Get(c echo.Context) error {
 	lesson.ID = id
 	lessonKey := datastore.NewKey(ctx, "Lesson", lesson.ID, 0, nil)
 	if err = datastore.Get(ctx, lessonKey, lesson); err != nil {
-		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		if err == datastore.ErrNoSuchEntity {
+			log.Warningf(ctx, "%+v\n", errors.WithStack(err))
 			return c.JSON(http.StatusNotFound, err.Error())
 		}
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
@@ -57,10 +58,11 @@ func Get(c echo.Context) error {
 	avatar.ID = lesson.AvatarID
 	avatarKey := datastore.NewKey(ctx, "Avatar", avatar.ID, 0, nil)
 	if err = datastore.Get(ctx, avatarKey, avatar); err != nil {
-		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		if err == datastore.ErrNoSuchEntity {
+			log.Warningf(ctx, "%+v\n", errors.WithStack(err))
 			return c.JSON(http.StatusNotFound, err.Error())
 		}
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	lesson.Avatar = *avatar
@@ -152,15 +154,19 @@ func Update(c echo.Context) error {
 		return err
 	}, nil)
 
+	if err != nil {
+		if err == datastore.ErrNoSuchEntity {
+			log.Warningf(ctx, "%+v\n", errors.WithStack(err))
+			return c.JSON(http.StatusNotFound, err.Error())
+		}
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
 	if !utility.IsValidXIDs(lesson.GraphicIDs) {
 		errMessage := "Invalid ID(s) error"
 		log.Warningf(ctx, errMessage)
 		return c.JSON(http.StatusBadRequest, errMessage)
-	}
-
-	if err != nil {
-		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
-		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, lesson)

@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo"
+	"github.com/pkg/errors"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/log"
@@ -17,9 +18,10 @@ func Gets(c echo.Context) error {
 	id := c.Param("id")
 
 	if voiceTexts, err := fetchVoiceTextsFromGCD(ctx, id); err != nil {
-		log.Errorf(ctx, err.Error())
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	} else if len(voiceTexts) == 0 {
+		log.Warningf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusNotFound, "record not found.")
 	} else {
 		return c.JSON(http.StatusOK, voiceTexts)

@@ -31,10 +31,11 @@ func Gets(c echo.Context) error {
 
 	var err error
 	if err = cloudHelper.FetchEntityFromGCD(ctx, lessonGraphic, "LessonGraphic"); err != nil {
-		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		if err == datastore.ErrNoSuchEntity {
+			log.Warningf(ctx, "%+v\n", errors.WithStack(err))
 			return c.JSON(http.StatusNotFound, err.Error())
 		}
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 

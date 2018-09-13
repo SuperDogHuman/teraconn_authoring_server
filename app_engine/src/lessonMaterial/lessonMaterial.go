@@ -3,6 +3,7 @@ package lessonMaterial
 import (
 	"cloud.google.com/go/storage"
 	"github.com/labstack/echo"
+	"github.com/pkg/errors"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 
@@ -35,16 +36,17 @@ func Gets(c echo.Context) error {
 
 	bytes, err := cloudHelper.GetObjectFromGCS(ctx, bucketName, filePath)
 	if err != nil {
-		log.Errorf(ctx, err.Error())
 		if err == storage.ErrObjectNotExist {
+			log.Warningf(ctx, "%+v\n", errors.WithStack(err))
 			return c.JSON(http.StatusNotFound, err.Error())
 		}
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	lessonMaterial := new(LessonMaterial)
 	if err := json.Unmarshal(bytes, lessonMaterial); err != nil {
-		log.Errorf(ctx, err.Error())
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
@@ -66,13 +68,13 @@ func Put(c echo.Context) error {
 	lessonMaterial := new(LessonMaterial)
 
 	if err := c.Bind(lessonMaterial); err != nil {
-		log.Errorf(ctx, err.Error())
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	contents, err := json.Marshal(lessonMaterial)
 	if err != nil {
-		log.Errorf(ctx, err.Error())
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
@@ -80,7 +82,7 @@ func Put(c echo.Context) error {
 	contentType := "application/json"
 
 	if err := cloudHelper.CreateObjectToGCS(ctx, bucketName, filePath, contentType, contents); err != nil {
-		log.Errorf(ctx, err.Error())
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
