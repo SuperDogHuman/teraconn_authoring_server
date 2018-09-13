@@ -2,6 +2,7 @@ package rawVoiceSigning
 
 import (
 	"github.com/labstack/echo"
+	"github.com/pkg/errors"
 	"github.com/rs/xid"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
@@ -33,12 +34,12 @@ func Get(c echo.Context) error {
 	contentType := "audio/wav"
 
 	if err := cloudHelper.CreateObjectToGCS(ctx, bucketName, fileName, contentType, nil); err != nil {
-		log.Errorf(ctx, err.Error())
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	if signedURL, err := cloudHelper.GetGCSSignedURL(ctx, bucketName, fileName, "PUT", contentType); err != nil {
-		log.Errorf(ctx, err.Error())
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	} else {
 		return c.JSON(http.StatusOK, rawWavSign{FileID: fileID, SignedURL: signedURL})
