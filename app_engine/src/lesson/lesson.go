@@ -54,6 +54,7 @@ func Get(c echo.Context) error {
 	}
 
 	avatar := new(lessonType.Avatar)
+	avatar.ID = lesson.AvatarID
 	avatarKey := datastore.NewKey(ctx, "Avatar", lesson.AvatarID, 0, nil)
 	if err = datastore.Get(ctx, avatarKey, avatar); err != nil {
 		if err == datastore.ErrNoSuchEntity {
@@ -75,6 +76,11 @@ func Get(c echo.Context) error {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
+
+	for i, id := range lesson.GraphicIDs {
+		graphics[i].ID = id
+	}
+
 	lesson.Graphics = graphics
 
 	return c.JSON(http.StatusOK, lesson)
@@ -98,6 +104,8 @@ func Create(c echo.Context) error {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
+
+	lesson.ID = id // for json response
 
 	return c.JSON(http.StatusCreated, lesson)
 }

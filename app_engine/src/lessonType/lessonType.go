@@ -44,8 +44,6 @@ type Graphic struct {
 	GraphicCategoryID string `json:"graphicCategoryID"`
 	UserID            string `json:"userID"`
 	FileType          string `json:"fileType"`
-	WidthPx           int    `json:"widthPx"`
-	HeightPx          int    `json:"heightPx"`
 	IsPublic          bool   `json:"isPublic"`
 }
 
