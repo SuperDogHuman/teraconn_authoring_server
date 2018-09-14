@@ -21,7 +21,8 @@ func Gets(c echo.Context) error {
 
 	var graphics []lessonType.Graphic
 	query := datastore.NewQuery("Graphic").Filter("IsPublic =", true)
-	if _, err := query.GetAll(ctx, &graphics); err != nil {
+	keys, err := query.GetAll(ctx, &graphics)
+	if err != nil {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -33,7 +34,8 @@ func Gets(c echo.Context) error {
 	}
 
 	for i, graphic := range graphics {
-		filePath := "graphic/" + graphic.ID + "." + graphic.FileType
+		id := keys[i].StringID()
+		filePath := "graphic/" + id + "." + graphic.FileType
 		fileType := "" // this is unnecessary when GET request
 		url, err := cloudHelper.GetGCSSignedURL(ctx, bucketName, filePath, "GET", fileType)
 
@@ -43,6 +45,7 @@ func Gets(c echo.Context) error {
 		}
 
 		log.Infof(ctx, "%v\n", url)
+		graphics[i].ID = id
 		graphics[i].URL = url
 	}
 

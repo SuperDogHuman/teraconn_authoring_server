@@ -172,8 +172,7 @@ func fetchGraphicFileTypesFromGCD(ctx context.Context, graphicIDs []string) (map
 	}
 
 	graphicFileTypes := map[string]string{}
-	graphicCount := len(graphicIDs)
-	graphics := make([]lessonType.Graphic, graphicCount)
+	graphics := make([]lessonType.Graphic, len(graphicIDs))
 	if err := datastore.GetMulti(ctx, keys, graphics); err != nil {
 		return nil, err
 	} else {

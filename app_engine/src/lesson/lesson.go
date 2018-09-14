@@ -71,8 +71,7 @@ func Get(c echo.Context) error {
 	for _, id := range lesson.GraphicIDs {
 		graphicKeys = append(graphicKeys, datastore.NewKey(ctx, "Graphic", id, 0, nil))
 	}
-	graphicCount := len(lesson.GraphicIDs)
-	graphics := make([]lessonType.Graphic, graphicCount)
+	graphics := make([]lessonType.Graphic, len(lesson.GraphicIDs))
 	if err = datastore.GetMulti(ctx, graphicKeys, graphics); err != nil {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
@@ -145,8 +144,7 @@ func Update(c echo.Context) error {
 			structKey := strings.Title(key)
 			switch v := lessonField.(type) {
 			case []interface{}:
-				length := len(v)
-				array := make([]string, length) // TODO support another types. reflect.TypeOf(v[0])
+				array := make([]string, len(v)) // TODO support another types. reflect.TypeOf(v[0])
 				mutable.FieldByName(structKey).Set(reflect.ValueOf(array))
 				for i := range v {
 					mutable.FieldByName(structKey).Index(i).Set(reflect.ValueOf(v[i]))
