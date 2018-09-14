@@ -1,3 +1,0 @@
-[submodule "app_engine/src/teraconnect-authoring/static/teraconnect"]
-	path = app_engine/src/teraconnect-authoring/static/teraconnect
-	url = https://github.com/SuperDogHuman/teraconn
