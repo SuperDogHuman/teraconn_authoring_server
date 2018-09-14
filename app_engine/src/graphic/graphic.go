@@ -4,6 +4,7 @@ import (
 	"cloudHelper"
 	"lessonType"
 	"net/http"
+	"strings"
 
 	"github.com/labstack/echo"
 	"github.com/pkg/errors"
@@ -13,6 +14,7 @@ import (
 )
 
 const bucketName = "teraconn_material"
+const thumbnailURL = "https://storage.googleapis.com/teraconn_thumbnail/graphic/{id}.{fileType}"
 
 // Gets is get lesson graphic.
 func Gets(c echo.Context) error {
@@ -44,9 +46,11 @@ func Gets(c echo.Context) error {
 			return c.JSON(http.StatusInternalServerError, err.Error())
 		}
 
-		log.Infof(ctx, "%v\n", url)
 		graphics[i].ID = id
 		graphics[i].URL = url
+
+		replacedURL := strings.Replace(thumbnailURL, "{id}", id, 1)
+		graphics[i].ThumbnailURL = strings.Replace(replacedURL, "{fileType}", graphic.FileType, 1)
 	}
 
 	return c.JSON(http.StatusOK, graphics)

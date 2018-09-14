@@ -24,9 +24,11 @@ type Lesson struct {
 type Avatar struct {
 	ID           string    `json:"id"`
 	UserID       string    `json:"userID"`
+	URL          string    `json:"url" datastore:"-"`
 	ThumbnailURL string    `json:"thumbnailURL" datastore:"-"`
 	Name         string    `json:"name"`
 	Version      int64     `json:"version"`
+	IsPublic     bool      `json:"isPublic"`
 	Created      time.Time `json:"created"`
 	Updated      time.Time `json:"updated"`
 }
@@ -41,6 +43,7 @@ type LessonAuthor struct {
 type Graphic struct {
 	ID                string `json:"id"`
 	URL               string `json:"url" datastore:"-"`
+	ThumbnailURL      string `json:"thumbnailURL" datastore:"-"`
 	GraphicCategoryID string `json:"graphicCategoryID"`
 	UserID            string `json:"userID"`
 	FileType          string `json:"fileType"`

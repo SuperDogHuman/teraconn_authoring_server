@@ -1,6 +1,7 @@
 package main
 
 import (
+	"avatar"
 	"graphic"
 	"lesson"
 	"lessonMaterial"
@@ -18,6 +19,8 @@ func init() {
 	e := echo.New()
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.CORS())
+
+	e.GET("/avatars", avatar.Gets)
 
 	e.GET("/graphics", graphic.Gets)
 
