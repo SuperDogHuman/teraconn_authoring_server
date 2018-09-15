@@ -5,6 +5,7 @@
 app_engine/pkg
 app_engine/src/*
 app_engine/src/teraconnect-authoring/static/teraconnect
+!app_engine/src/avatar
 !app_engine/src/cloudHelper
 !app_engine/src/graphic
 !app_engine/src/storageObject

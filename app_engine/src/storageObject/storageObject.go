@@ -83,7 +83,7 @@ func Posts(c echo.Context) error {
 				log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 				return c.JSON(http.StatusInternalServerError, err.Error())
 			}
-		} else if fileRequest.Entity == "avarar" {
+		} else if fileRequest.Entity == "avatar" {
 			avatar := new(lessonType.Avatar)
 			// avatar.UserID  = "foo"	// TODO
 			key := datastore.NewKey(ctx, "Avatar", fileID, 0, nil)
