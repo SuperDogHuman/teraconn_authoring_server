@@ -7,6 +7,7 @@ app_engine/src/*
 app_engine/src/teraconnect-authoring/static/teraconnect
 !app_engine/src/cloudHelper
 !app_engine/src/graphic
+!app_engine/src/storageObject
 !app_engine/src/teraconnect-api
 !app_engine/src/teraconnect-authoring
 !app_engine/src/lesson
@@ -15,4 +16,3 @@ app_engine/src/teraconnect-authoring/static/teraconnect
 !app_engine/src/lessonType
 !app_engine/src/lessonVoiceText
 !app_engine/src/rawVoiceSigning
-!app_engine/src/signedURL
