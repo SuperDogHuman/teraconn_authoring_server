@@ -3,7 +3,7 @@ package lessonType
 import "time"
 
 type Lesson struct {
-	ID           string    `json:"id"`
+	ID           string    `json:"id" datastore:"-"`
 	AvatarID     string    `json:"avatarID"`
 	Avatar       Avatar    `json:"avatar" datastore:"-"`
 	Title        string    `json:"title"`
@@ -22,7 +22,7 @@ type Lesson struct {
 }
 
 type Avatar struct {
-	ID           string    `json:"id"`
+	ID           string    `json:"id" datastore:"-"`
 	UserID       string    `json:"userID"`
 	URL          string    `json:"url" datastore:"-"`
 	ThumbnailURL string    `json:"thumbnailURL" datastore:"-"`
@@ -34,14 +34,14 @@ type Avatar struct {
 }
 
 type LessonAuthor struct {
-	ID       string `json:"id"`
+	ID       string `json:"id" datastore:"-"`
 	LessonID string `json:"lessonID"`
 	UserID   string `json:"userID"`
 	Role     string `json:"role"`
 }
 
 type Graphic struct {
-	ID                string `json:"id"`
+	ID                string `json:"id" datastore:"-"`
 	URL               string `json:"url" datastore:"-"`
 	ThumbnailURL      string `json:"thumbnailURL" datastore:"-"`
 	GraphicCategoryID string `json:"graphicCategoryID"`

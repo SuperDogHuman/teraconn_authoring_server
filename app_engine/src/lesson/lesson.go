@@ -55,7 +55,6 @@ func Get(c echo.Context) error {
 	lesson.ID = id // for json field
 
 	avatar := new(lessonType.Avatar)
-	avatar.ID = lesson.AvatarID
 	avatarKey := datastore.NewKey(ctx, "Avatar", lesson.AvatarID, 0, nil)
 	if err = datastore.Get(ctx, avatarKey, avatar); err != nil {
 		if err == datastore.ErrNoSuchEntity {
@@ -65,6 +64,7 @@ func Get(c echo.Context) error {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
+	avatar.ID = lesson.AvatarID
 	lesson.Avatar = *avatar
 
 	var graphicKeys []*datastore.Key
