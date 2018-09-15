@@ -2,7 +2,7 @@
     {
       "origin": ["https://teraconnect.org", "https://authoring.teraconnect.org", "http://localhost:1234"],
       "responseHeader": ["Content-Type"],
-      "method": ["GET"],
+      "method": ["GET", "OPTIONS", "PUT"],
       "maxAgeSeconds": 3600
     }
 ]
