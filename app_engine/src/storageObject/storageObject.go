@@ -6,6 +6,7 @@ import (
 	"lessonType"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/labstack/echo"
 	"github.com/pkg/errors"
@@ -76,6 +77,7 @@ func Posts(c echo.Context) error {
 
 		if fileRequest.Entity == "graphic" {
 			graphic := new(lessonType.Graphic)
+			graphic.Created = time.Now()
 			graphic.FileType = fileRequest.Extension
 			// graphic.UserID  = "foo"	// TODO
 			key := datastore.NewKey(ctx, "Graphic", fileID, 0, nil)
@@ -85,6 +87,7 @@ func Posts(c echo.Context) error {
 			}
 		} else if fileRequest.Entity == "avatar" {
 			avatar := new(lessonType.Avatar)
+			avatar.Created = time.Now()
 			// avatar.UserID  = "foo"	// TODO
 			key := datastore.NewKey(ctx, "Avatar", fileID, 0, nil)
 			if _, err = datastore.Put(ctx, key, avatar); err != nil {

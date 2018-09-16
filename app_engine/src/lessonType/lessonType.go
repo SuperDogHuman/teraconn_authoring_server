@@ -34,20 +34,24 @@ type Avatar struct {
 }
 
 type LessonAuthor struct {
-	ID       string `json:"id" datastore:"-"`
-	LessonID string `json:"lessonID"`
-	UserID   string `json:"userID"`
-	Role     string `json:"role"`
+	ID       string    `json:"id" datastore:"-"`
+	LessonID string    `json:"lessonID"`
+	UserID   string    `json:"userID"`
+	Role     string    `json:"role"`
+	Created  time.Time `json:"created"`
+	Updated  time.Time `json:"updated"`
 }
 
 type Graphic struct {
-	ID                string `json:"id" datastore:"-"`
-	URL               string `json:"url" datastore:"-"`
-	ThumbnailURL      string `json:"thumbnailURL" datastore:"-"`
-	GraphicCategoryID string `json:"graphicCategoryID"`
-	UserID            string `json:"userID"`
-	FileType          string `json:"fileType"`
-	IsPublic          bool   `json:"isPublic"`
+	ID                string    `json:"id" datastore:"-"`
+	URL               string    `json:"url" datastore:"-"`
+	ThumbnailURL      string    `json:"thumbnailURL" datastore:"-"`
+	GraphicCategoryID string    `json:"graphicCategoryID"`
+	UserID            string    `json:"userID"`
+	FileType          string    `json:"fileType"`
+	IsPublic          bool      `json:"isPublic"`
+	Created           time.Time `json:"created"`
+	Updated           time.Time `json:"updated"`
 }
 
 type LessonVoiceText struct {
