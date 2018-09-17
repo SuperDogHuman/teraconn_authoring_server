@@ -3,6 +3,7 @@ package lessonPack
 import (
 	"context"
 
+	"cloud.google.com/go/storage"
 	"github.com/labstack/echo"
 	"github.com/pkg/errors"
 	"google.golang.org/appengine"
@@ -191,11 +192,13 @@ func removeUsedFilesInGCS(ctx context.Context, id string, voiceTexts []lessonTyp
 	for _, voiceText := range voiceTexts {
 		filePathInGCS := id + "-" + voiceText.FileID + ".wav"
 
-		if err = cloudHelper.DeleteObjectsFromGCS(ctx, "teraconn_raw_voice", filePathInGCS); err != nil {
+		err = cloudHelper.DeleteObjectsFromGCS(ctx, "teraconn_raw_voice", filePathInGCS)
+		if err != nil && err != storage.ErrObjectNotExist {
 			return err
 		}
 
-		if err = cloudHelper.DeleteObjectsFromGCS(ctx, "teraconn_voice_for_transcription", filePathInGCS); err != nil {
+		err = cloudHelper.DeleteObjectsFromGCS(ctx, "teraconn_voice_for_transcription", filePathInGCS)
+		if err != nil && err != storage.ErrObjectNotExist {
 			return err
 		}
 	}
