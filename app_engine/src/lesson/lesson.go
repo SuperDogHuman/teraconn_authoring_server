@@ -150,7 +150,12 @@ func Update(c echo.Context) error {
 					mutable.FieldByName(structKey).Index(i).Set(reflect.ValueOf(v[i]))
 				}
 			default:
-				mutable.FieldByName(structKey).Set(reflect.ValueOf(v))
+				if structKey == "ViewCount" || structKey == "Version" {
+					intValue := int64(v.(float64))
+					mutable.FieldByName(structKey).SetInt(intValue)
+				} else {
+					mutable.FieldByName(structKey).Set(reflect.ValueOf(v))
+				}
 			}
 		}
 
