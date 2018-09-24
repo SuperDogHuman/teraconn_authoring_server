@@ -14,9 +14,14 @@ handlers:
   upload: static/teraconnect/index.html
   secure: always
 
-- url: /(.*\.(js|css|png|map))$
+- url: /robots.txt
+  static_files: static/robots.txt
+  upload: static/robots.txt
+  secure: always
+
+- url: /(.*\.(js|css|png|jpg|map))$
   static_files: static/teraconnect/\1
-  upload: static/teraconnect/.*\.(js|css|png|map)$
+  upload: static/teraconnect/.*\.(js|css|png|jpg|map)$
   secure: always
 
 - url: /.*
