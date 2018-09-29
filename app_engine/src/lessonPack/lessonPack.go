@@ -46,6 +46,11 @@ func Update(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
+	if lesson.IsPacked { // TODO remove me when end of beta.
+		log.Warningf(ctx, "%+v\n", "already packed lesson")
+		return c.JSON(http.StatusOK, "success.")
+	}
+
 	var graphicFileTypes map[string]string
 	if graphicFileTypes, err = fetchGraphicFileTypesFromGCD(ctx, lesson.GraphicIDs); err != nil {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
