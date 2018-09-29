@@ -17,6 +17,7 @@ type Lesson struct {
 	IsPacked     bool      `json:"isPacked"`
 	IsPublic     bool      `json:"isPublic"`
 	UserID       string    `json:"userID"`
+	ShouldDelete bool      `json:"-"`
 	Created      time.Time `json:"created"`
 	Updated      time.Time `json:"updated"`
 }

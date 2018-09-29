@@ -52,6 +52,12 @@ func Get(c echo.Context) error {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
+
+	if lesson.ShouldDelete {
+		log.Warningf(ctx, "%v\n", "shoud delete lesson.")
+		return c.JSON(http.StatusNotFound, "not found.")
+	}
+
 	lesson.ID = id // for json field
 
 	avatar := new(lessonType.Avatar)
@@ -138,6 +144,11 @@ func Update(c echo.Context) error {
 			return err
 		}
 
+		if lesson.IsPacked { // FIXME when end of beta.
+			log.Warningf(ctx, "trying update of published lesson.")
+			return c.JSON(http.StatusBadRequest, "the lesson are already published.")
+		}
+
 		updateLesson := f.(map[string]interface{})
 		mutable := reflect.ValueOf(lesson).Elem()
 		for key, lessonField := range updateLesson {
@@ -179,4 +190,49 @@ func Update(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, lesson)
+}
+
+// Destroy is update to true function of shouldDelete field in lesson.
+func Destroy(c echo.Context) error {
+	ctx := appengine.NewContext(c.Request())
+
+	id := c.Param("id")
+
+	ids := []string{id}
+	if !utility.IsValidXIDs(ids) {
+		errMessage := "Invalid ID(s) error"
+		log.Warningf(ctx, errMessage)
+		return c.JSON(http.StatusBadRequest, errMessage)
+	}
+
+	var err error
+
+	lesson := new(lessonType.Lesson)
+	lessonKey := datastore.NewKey(ctx, "Lesson", id, 0, nil)
+	if err = datastore.Get(ctx, lessonKey, lesson); err != nil {
+		if err == datastore.ErrNoSuchEntity {
+			log.Warningf(ctx, "%+v\n", errors.WithStack(err))
+			return c.JSON(http.StatusNotFound, err.Error())
+		}
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	if lesson.IsPacked {
+		log.Warningf(ctx, "%v\n", "the lesson already has published.")
+		return c.JSON(http.StatusInternalServerError, "not deleted.")
+	}
+
+	if lesson.ShouldDelete {
+		log.Warningf(ctx, "%v\n", "the lesson already has delete status.")
+		return c.JSON(http.StatusNotFound, "not found.")
+	}
+
+	lesson.ShouldDelete = true
+	if _, err = datastore.Put(ctx, lessonKey, lesson); err != nil {
+		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, "the lesson has deleted.")
 }

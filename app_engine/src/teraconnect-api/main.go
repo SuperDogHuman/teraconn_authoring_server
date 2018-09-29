@@ -28,6 +28,7 @@ func init() {
 	e.GET("/lessons/:id", lesson.Get)
 	e.POST("/lessons", lesson.Create)
 	e.PATCH("/lessons/:id", lesson.Update)
+	e.DELETE("/lessons/:id", lesson.Destroy)
 
 	e.GET("/lessons/:id/materials", lessonMaterial.Gets)
 	e.POST("/lessons/:id/materials", lessonMaterial.Put)
