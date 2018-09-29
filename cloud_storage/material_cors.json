@@ -1,6 +1,6 @@
 [
     {
-      "origin": ["https://teraconnect.org", "https://authoring.teraconnect.org", "http://localhost:1234"],
+      "origin": ["https://teraconnect.org", "https://authoring.teraconnect.org"],
       "responseHeader": ["Content-Type"],
       "method": ["GET", "OPTIONS", "PUT"],
       "maxAgeSeconds": 3600
