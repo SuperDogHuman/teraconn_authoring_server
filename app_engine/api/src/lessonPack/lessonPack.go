@@ -19,8 +19,6 @@ import (
 	"utility"
 )
 
-const bucketName = "teraconn_material"
-
 // Update is update lesson function.
 func Update(c echo.Context) error {
 	ctx := appengine.NewContext(c.Request())
@@ -93,6 +91,7 @@ func Update(c echo.Context) error {
 
 	zipFilePath := "lesson/" + id + ".zip"
 	contentType := "application/zip"
+	bucketName := utility.MaterialBucketName(ctx)
 	if err := cloudHelper.CreateObjectToGCS(ctx, bucketName, zipFilePath, contentType, zipBuffer.Bytes()); err != nil {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
@@ -105,6 +104,7 @@ func importGraphicsToZip(ctx context.Context, usedGraphicIDs []string, graphicFi
 	for _, graphicID := range usedGraphicIDs {
 		fileType := graphicFileTypes[graphicID]
 		filePathInGCS := "graphic/" + graphicID + "." + fileType
+		bucketName := utility.MaterialBucketName(ctx)
 
 		objectBytes, err := cloudHelper.GetObjectFromGCS(ctx, bucketName, filePathInGCS)
 		if err != nil {
@@ -129,6 +129,7 @@ func importGraphicsToZip(ctx context.Context, usedGraphicIDs []string, graphicFi
 func importVoiceToZip(ctx context.Context, voiceTexts []lessonType.LessonVoiceText, id string, zipWriter *zip.Writer) error {
 	for _, voiceText := range voiceTexts {
 		filePathInGCS := "voice/" + id + "/" + voiceText.FileID + ".ogg"
+		bucketName := utility.MaterialBucketName(ctx)
 
 		objectBytes, err := cloudHelper.GetObjectFromGCS(ctx, bucketName, filePathInGCS)
 		if err != nil {
@@ -152,6 +153,7 @@ func importVoiceToZip(ctx context.Context, voiceTexts []lessonType.LessonVoiceTe
 
 func importLessonJsonToZip(ctx context.Context, id string, zipWriter *zip.Writer) error {
 	filePathInGCS := "lesson/" + id + ".json"
+	bucketName := utility.MaterialBucketName(ctx)
 	jsonBytes, err := cloudHelper.GetObjectFromGCS(ctx, bucketName, filePathInGCS)
 	if err != nil {
 		return err

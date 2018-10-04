@@ -4,10 +4,10 @@ runtime:     go
 threadsafe:  true # unnecessary?
 
 handlers:
-
 - url: /.*
   script: _go_app
   secure: always
 
 skip_files:
-  - ^(.*/)?\..*$
+- ^(.*/)?\..*$
+- vendor/.*$

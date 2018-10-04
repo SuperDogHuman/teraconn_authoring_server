@@ -12,7 +12,6 @@ import (
 	"google.golang.org/appengine/log"
 )
 
-const bucketName = "teraconn_material"
 const thumbnailURL = "https://storage.googleapis.com/teraconn_thumbnail/avatar/{id}.png"
 
 // Gets is get lesson avatar.

@@ -5,6 +5,7 @@ import (
 	"lessonType"
 	"net/http"
 	"strings"
+	"utility"
 
 	"github.com/labstack/echo"
 	"github.com/pkg/errors"
@@ -13,7 +14,6 @@ import (
 	"google.golang.org/appengine/log"
 )
 
-const bucketName = "teraconn_material"
 const thumbnailURL = "https://storage.googleapis.com/teraconn_thumbnail/graphic/{id}.{fileType}"
 
 // Gets is get lesson graphic.
@@ -39,6 +39,7 @@ func Gets(c echo.Context) error {
 		id := keys[i].StringID()
 		filePath := "graphic/" + id + "." + graphic.FileType
 		fileType := "" // this is unnecessary when GET request
+		bucketName := utility.MaterialBucketName(ctx)
 		url, err := cloudHelper.GetGCSSignedURL(ctx, bucketName, filePath, "GET", fileType)
 
 		if err != nil {
