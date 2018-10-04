@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 	"time"
+	"utility"
 
 	"github.com/labstack/echo"
 	"github.com/pkg/errors"
@@ -15,8 +16,6 @@ import (
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/log"
 )
-
-const bucketName = "teraconn_material"
 
 // Gets is get signed URLs of files.
 func Gets(c echo.Context) error {
@@ -37,6 +36,7 @@ func Gets(c echo.Context) error {
 		// TODO check file exists
 
 		filePath := filePath(request.Entity, request.ID, request.Extension)
+		bucketName := utility.MaterialBucketName(ctx)
 		url, err := cloudHelper.GetGCSSignedURL(ctx, bucketName, filePath, "GET", "")
 		if err != nil {
 			log.Errorf(ctx, "%+v\n", errors.WithStack(err))
@@ -58,6 +58,7 @@ func Posts(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
+	bucketName := utility.MaterialBucketName(ctx)
 	urls := make([]signedURL, len(request.FileRequests))
 
 	for i, fileRequest := range request.FileRequests {

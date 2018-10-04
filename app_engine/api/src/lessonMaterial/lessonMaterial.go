@@ -14,8 +14,6 @@ import (
 	"utility"
 )
 
-const bucketName = "teraconn_material"
-
 // GetLessonMaterials is get material of the lesson function.
 func Gets(c echo.Context) error {
 	// increment view cont in memorycache
@@ -33,6 +31,7 @@ func Gets(c echo.Context) error {
 	}
 
 	filePath := "lesson/" + lessonID + ".json"
+	bucketName := utility.MaterialBucketName(ctx)
 
 	bytes, err := cloudHelper.GetObjectFromGCS(ctx, bucketName, filePath)
 	if err != nil {
@@ -80,6 +79,7 @@ func Put(c echo.Context) error {
 
 	filePath := "lesson/" + lessonID + ".json"
 	contentType := "application/json"
+	bucketName := utility.MaterialBucketName(ctx)
 
 	if err := cloudHelper.CreateObjectToGCS(ctx, bucketName, filePath, contentType, contents); err != nil {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))

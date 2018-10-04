@@ -196,15 +196,17 @@ func fetchGraphicFileTypesFromGCD(ctx context.Context, graphicIDs []string) (map
 func removeUsedFilesInGCS(ctx context.Context, id string, voiceTexts []lessonType.LessonVoiceText) error {
 	var err error
 
+	rawVoiceBucketName := utility.RawVoiceBucketName(ctx)
+	voiceForTranscriptionBucketName := utility.VoiceForTranscriptionBucketName(ctx)
 	for _, voiceText := range voiceTexts {
 		filePathInGCS := id + "-" + voiceText.FileID + ".wav"
 
-		err = cloudHelper.DeleteObjectsFromGCS(ctx, "teraconn_raw_voice", filePathInGCS)
+		err = cloudHelper.DeleteObjectsFromGCS(ctx, rawVoiceBucketName, filePathInGCS)
 		if err != nil && err != storage.ErrObjectNotExist {
 			return err
 		}
 
-		err = cloudHelper.DeleteObjectsFromGCS(ctx, "teraconn_voice_for_transcription", filePathInGCS)
+		err = cloudHelper.DeleteObjectsFromGCS(ctx, voiceForTranscriptionBucketName, filePathInGCS)
 		if err != nil && err != storage.ErrObjectNotExist {
 			return err
 		}
