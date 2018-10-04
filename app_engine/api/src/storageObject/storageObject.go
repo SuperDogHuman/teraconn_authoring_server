@@ -23,42 +23,42 @@ func Gets(c echo.Context) error {
 	ctx := appengine.NewContext(c.Request())
 
 	jsonString := c.Request().Header.Get("X-Get-Params")
-	var fileRequests []FileRequest
+	var fileRequests []fileRequest
 	if err := json.Unmarshal([]byte(jsonString), &fileRequests); err != nil {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	urlLength := len(fileRequests)
-	urls := make([]SignedURL, urlLength)
+	urls := make([]signedURL, urlLength)
 
-	for i, fileRequest := range fileRequests {
+	for i, request := range fileRequests {
 		// TODO check user permission
 		// TODO check file exists
 
-		filePath := filePath(fileRequest.Entity, fileRequest.ID, fileRequest.Extension)
+		filePath := filePath(request.Entity, request.ID, request.Extension)
 		url, err := cloudHelper.GetGCSSignedURL(ctx, bucketName, filePath, "GET", "")
 		if err != nil {
 			log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 			return c.JSON(http.StatusInternalServerError, err.Error())
 		}
-		urls[i] = SignedURL{fileRequest.ID, url}
+		urls[i] = signedURL{request.ID, url}
 	}
 
-	return c.JSON(http.StatusOK, URLResponses{SignedURLs: urls})
+	return c.JSON(http.StatusOK, urlResponses{SignedURLs: urls})
 }
 
 // Posts is create blank object to Cloud Storage for direct upload from client.
 func Posts(c echo.Context) error {
 	ctx := appengine.NewContext(c.Request())
 
-	request := new(PostRequest)
+	request := new(postRequest)
 	if err := c.Bind(request); err != nil {
 		log.Errorf(ctx, "%+v\n", errors.WithStack(err))
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	urls := make([]SignedURL, len(request.FileRequests))
+	urls := make([]signedURL, len(request.FileRequests))
 
 	for i, fileRequest := range request.FileRequests {
 		fileID := xid.New().String()
@@ -96,32 +96,32 @@ func Posts(c echo.Context) error {
 			}
 		}
 
-		urls[i] = SignedURL{fileID, url}
+		urls[i] = signedURL{fileID, url}
 	}
 
-	return c.JSON(http.StatusOK, URLResponses{SignedURLs: urls})
+	return c.JSON(http.StatusOK, urlResponses{SignedURLs: urls})
 }
 
 func filePath(entity string, id string, extension string) string {
 	return strings.ToLower(entity) + "/" + id + "." + extension
 }
 
-type PostRequest struct {
-	FileRequests []FileRequest `json:"fileRequests"`
+type postRequest struct {
+	FileRequests []fileRequest `json:"fileRequests"`
 }
 
-type FileRequest struct {
+type fileRequest struct {
 	ID          string `json:"id"`
 	Entity      string `json:"entity"`
 	Extension   string `json:"extension"`
 	ContentType string `json:"contentType"`
 }
 
-type URLResponses struct {
-	SignedURLs []SignedURL `json:"signedURLs"`
+type urlResponses struct {
+	SignedURLs []signedURL `json:"signedURLs"`
 }
 
-type SignedURL struct {
+type signedURL struct {
 	FileID    string `json:"fileID"`
 	SignedURL string `json:"signedURL"`
 }
