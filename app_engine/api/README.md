@@ -1,5 +1,6 @@
 - brew install goenv direnv
 - go get -u necessary-packages
-- gcloud app deploy development.yaml // when development
-- gcloud app deploy production.yaml // when production
+- cd ./app_engine/api
+- gcloud app deploy src/main/development.yaml
+- gcloud app deploy src/main/production.yaml
 
