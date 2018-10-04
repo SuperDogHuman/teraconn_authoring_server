@@ -4,7 +4,7 @@ const ffmpegPath = require('ffmpeg-static').path;
 const storage    = require('@google-cloud/storage')();
 const datastore  = require('@google-cloud/datastore')();
 
-exports.wavToText = async (data, context) => {
+exports.wavToText = async (data, _) => {
     const file = data;
     const request = {
         audio: {
@@ -42,7 +42,7 @@ exports.wavToText = async (data, context) => {
     });
 }
 
-exports.wavTo16Khz = async (data, context) => {
+exports.wavTo16Khz = async (data, _) => {
     const file = data;
     if (file.size == 0) { return; }
 
@@ -52,7 +52,8 @@ exports.wavTo16Khz = async (data, context) => {
     const localResampledWAVFilePath = `/tmp/resampled-${fileID}.wav`;
     const remoteWAVFilePath         = file.name;
 
-    await downloadFromStorage('teraconn_raw_voice', file.name, localRawWAVFilePath).catch((err) => {
+    const bucketForDownload = file.bucket;
+    await downloadFromStorage(bucketForDownload, file.name, localRawWAVFilePath).catch((err) => {
         console.error(err);
     });
 
@@ -60,7 +61,10 @@ exports.wavTo16Khz = async (data, context) => {
         console.error(err);
     });
 
-    await uploadToStorage('teraconn_voice_for_transcription', localResampledWAVFilePath, remoteWAVFilePath).catch((err) => {
+    let bucketForUpload = 'teraconn_voice_for_transcription';
+    if (bucketForDownload.includes('development')) bucketForUpload += '_development';
+
+    await uploadToStorage(bucketForUpload, localResampledWAVFilePath, remoteWAVFilePath).catch((err) => {
         console.error(err);
     });
 
@@ -81,7 +85,7 @@ exports.wavTo16Khz = async (data, context) => {
     }
 }
 
-exports.wavToOgg = async (data, context) => {
+exports.wavToOgg = async (data, _) => {
     const file = data;
     if (file.size == 0) { return; }
 
@@ -92,7 +96,8 @@ exports.wavToOgg = async (data, context) => {
     const localOGGFilePath  = `/tmp/${fileID}.ogg`;
     const remoteOGGFilePath = `voice/${lessonID}/${fileID}.ogg`;
 
-    await downloadFromStorage('teraconn_raw_voice', file.name, localWAVFilePath).catch((err) => {
+    const bucketForDownload = file.bucket;
+    await downloadFromStorage(bucketForDownload, file.name, localWAVFilePath).catch((err) => {
         console.error(err);
     });
 
@@ -100,7 +105,10 @@ exports.wavToOgg = async (data, context) => {
         console.error(err);
     });
 
-    await uploadToStorage('teraconn_material', localOGGFilePath, remoteOGGFilePath).catch((err) => {
+    let bucketForUpload = 'teraconn_material';
+    if (bucketForDownload.includes('development')) bucketForUpload += '_development';
+
+    await uploadToStorage(bucketForUpload, localOGGFilePath, remoteOGGFilePath).catch((err) => {
         console.error(err);
     });
 
