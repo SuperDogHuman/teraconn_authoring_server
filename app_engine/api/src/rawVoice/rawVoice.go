@@ -55,6 +55,6 @@ type postRequest struct {
 }
 
 type signedURL struct {
-	FileID    string `json:"fileID"`
-	SignedURL string `json:"signedURL"`
+	FileID    string `json:"file_id"`
+	SignedURL string `json:"signed_url"`
 }
