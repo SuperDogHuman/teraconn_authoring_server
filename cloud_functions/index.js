@@ -4,7 +4,15 @@ const ffmpegPath = require('ffmpeg-static').path;
 const storage    = require('@google-cloud/storage')();
 const datastore  = require('@google-cloud/datastore')();
 
-exports.wavToText = async (data, _) => {
+exports.wavToTextProd = async (data, _) => {
+    await wavToText(data);
+}
+
+exports.wavToTextDev = async (data, _) => {
+    await wavToText(data);
+}
+
+async function wavToText(data) {
     const file = data;
     const request = {
         audio: {
@@ -42,7 +50,15 @@ exports.wavToText = async (data, _) => {
     });
 }
 
-exports.wavTo16Khz = async (data, _) => {
+exports.wavTo16KhzProd = async (data, _) => {
+    await wavTo16Khz(data);
+}
+
+exports.wavTo16KhzDev = async (data, _) => {
+    await wavTo16Khz(data);
+}
+
+async function wavTo16Khz(data) {
     const file = data;
     if (file.size == 0) { return; }
 
@@ -85,7 +101,15 @@ exports.wavTo16Khz = async (data, _) => {
     }
 }
 
-exports.wavToOgg = async (data, _) => {
+exports.wavToOggProd = async (data, _) => {
+    await wavToOgg(data);
+}
+
+exports.wavToOggDev = async (data, _) => {
+    await wavToOgg(data);
+}
+
+async function wavToOgg(data) {
     const file = data;
     if (file.size == 0) { return; }
 
