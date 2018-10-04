@@ -10,4 +10,3 @@ handlers:
 
 skip_files:
 - ^(.*/)?\..*$
-- vendor/.*$
