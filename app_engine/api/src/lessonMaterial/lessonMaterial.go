@@ -92,7 +92,8 @@ func Put(c echo.Context) error {
 type LessonMaterial struct {
 	DurationSec float64          `json:"durationSec"`
 	Timelines   []LessonTimeline `json:"timelines"`
-	Pose        LessonAvatarPose `json:"poseKey"`
+	PoseKey     LessonAvatarPose `json:"poseKey"`
+	FaceKey     LessonAvatarFace `json:"faceKey"`
 }
 
 type LessonTimeline struct {
@@ -149,6 +150,54 @@ type LessonRotation struct {
 }
 
 type LessonPosition struct {
-	Rot  []float32 `json:"pos"`
+	Pos  []float32 `json:"pos"`
 	Time float32   `json:"time"`
+}
+
+type LessonAvatarFace struct {
+	AllAngry       LessonWeight `json:"allAngry"`
+	AllFun         LessonWeight `json:"allFun"`
+	AllJoy         LessonWeight `json:"allJoy"`
+	AllSorrow      LessonWeight `json:"allSorrow"`
+	AllSurprised   LessonWeight `json:"allSurprised"`
+	BrwAngry       LessonWeight `json:"brwAngry"`
+	BrwFun         LessonWeight `json:"brwFun"`
+	BrwJoy         LessonWeight `json:"brwJoy"`
+	BrwSorrow      LessonWeight `json:"brwSorrow"`
+	BrwSurprised   LessonWeight `json:"brwSurprised"`
+	EyeAngry       LessonWeight `json:"eyeAngry"`
+	EyeClose       LessonWeight `json:"eyeClose"`
+	EyeCloseR      LessonWeight `json:"eyeCloseR"`
+	EyeCloseL      LessonWeight `json:"eyeCloseL"`
+	EyeJoy         LessonWeight `json:"eyeJoy"`
+	EyeJoyR        LessonWeight `json:"eyeJoyR"`
+	EyeJoyL        LessonWeight `json:"eyeJoyL"`
+	EyeSorrow      LessonWeight `json:"eyeSorrow"`
+	EyeSurprised   LessonWeight `json:"eyeSurprised"`
+	EyeExtra       LessonWeight `json:"eyeExtra"`
+	MouthUp        LessonWeight `json:"mouthUp"`
+	MouthDown      LessonWeight `json:"mouthDown"`
+	MouthAngry     LessonWeight `json:"mouthAngry"`
+	MouthCorner    LessonWeight `json:"mouthCorner"`
+	MouthFun       LessonWeight `json:"mouthFun"`
+	MouthJoy       LessonWeight `json:"mouthJoy"`
+	MouthSorrow    LessonWeight `json:"mouthSorrow"`
+	MouthSurprised LessonWeight `json:"mouthSurprised"`
+	MouthA         LessonWeight `json:"mouthA"`
+	MouthI         LessonWeight `json:"mouthI"`
+	MouthU         LessonWeight `json:"mouthU"`
+	MouthE         LessonWeight `json:"mouthE"`
+	MouthO         LessonWeight `json:"mouthO"`
+	Fung1          LessonWeight `json:"fung1"`
+	Fung1Low       LessonWeight `json:"fung1Low"`
+	Fung1Up        LessonWeight `json:"fung1Up"`
+	Fung2          LessonWeight `json:"fung2"`
+	Fung2Low       LessonWeight `json:"fung2Low"`
+	Fung2Up        LessonWeight `json:"fung2Up"`
+	EyeExtraOn     LessonWeight `json:"eyeExtraOn"`
+}
+
+type LessonWeight struct {
+	Values []float32 `json:"values"`
+	Times  []float32 `json:"times"`
 }
