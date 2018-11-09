@@ -97,11 +97,11 @@ type LessonMaterial struct {
 }
 
 type LessonTimeline struct {
-	TimeSec  float64                   `json:"timeSec"`
-	Text     LessonMaterialText        `json:"text"`
-	Voice    LessonMaterialVoice       `json:"voice"`
-	Graphic  []LessonMaterialGraphic   `json:"graphics"`
-	SPAction LessonAvatarSpecialAction `json:"spAction"`
+	TimeSec float64                 `json:"timeSec"`
+	Text    LessonMaterialText      `json:"text"`
+	Voice   LessonMaterialVoice     `json:"voice"`
+	Graphic []LessonMaterialGraphic `json:"graphics"`
+	Action  LessonAvatarAction      `json:"action"`
 }
 
 type LessonMaterialText struct {
@@ -128,9 +128,8 @@ type LessonMaterialGraphic struct {
 	VerticalAlign   string `json:"verticalAlign"`
 }
 
-type LessonAvatarSpecialAction struct {
-	Action         string `json:"action"`
-	FaceExpression string `json:"faceExpression"`
+type LessonAvatarAction struct {
+	Action string `json:"action"`
 }
 
 type LessonAvatarPose struct {
