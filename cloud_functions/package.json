@@ -13,10 +13,10 @@
   },
   "scripts": {
     "deploy_to_text_prod": "gcloud beta functions deploy wavToTextProd  --trigger-resource teraconn_voice_for_transcription             --trigger-event google.storage.object.finalize --region asia-northeast1 --memory 256 --timeout 540 --runtime nodejs8",
-    "deploy_to_16k_prod":  "gcloud beta functions deploy wavTo16KhzProd --trigger-resource teraconn_raw_voice                           --trigger-event google.storage.object.finalize --region asia-northeast1 --memory 256 --timeout 540 --runtime nodejs8",
-    "deploy_to_ogg_prod":  "gcloud beta functions deploy wavToOggProd   --trigger-resource teraconn_raw_voice                           --trigger-event google.storage.object.finalize --region asia-northeast1 --memory 256 --timeout 540 --runtime nodejs8",
     "deploy_to_text_dev":  "gcloud beta functions deploy wavToTextDev   --trigger-resource teraconn_voice_for_transcription_development --trigger-event google.storage.object.finalize --region asia-northeast1 --memory 256 --timeout 540 --runtime nodejs8",
+    "deploy_to_16k_prod":  "gcloud beta functions deploy wavTo16KhzProd --trigger-resource teraconn_raw_voice                           --trigger-event google.storage.object.finalize --region asia-northeast1 --memory 256 --timeout 540 --runtime nodejs8",
     "deploy_to_16k_dev":   "gcloud beta functions deploy wavTo16KhzDev  --trigger-resource teraconn_raw_voice_development               --trigger-event google.storage.object.finalize --region asia-northeast1 --memory 256 --timeout 540 --runtime nodejs8",
+    "deploy_to_ogg_prod":  "gcloud beta functions deploy wavToOggProd   --trigger-resource teraconn_raw_voice                           --trigger-event google.storage.object.finalize --region asia-northeast1 --memory 256 --timeout 540 --runtime nodejs8",
     "deploy_to_ogg_dev":   "gcloud beta functions deploy wavToOggDev    --trigger-resource teraconn_raw_voice_development               --trigger-event google.storage.object.finalize --region asia-northeast1 --memory 256 --timeout 540 --runtime nodejs8"
   },
   "engines": {
