@@ -20,9 +20,9 @@ func init() {
 	e.Pre(middleware.RemoveTrailingSlash())
   e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{
-      "https://authoring.teraconnect.org",
-//      "https://teraconnect-authoring-development-dot-teraconnect-209509.appspot.com",
-//      "http://localhost:1234",
+			"https://authoring.teraconnect.org",
+//			"https://teraconnect-authoring-development-dot-teraconnect-209509.appspot.com",
+//			"http://localhost:1234",
     },
   }))
 
