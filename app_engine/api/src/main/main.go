@@ -18,13 +18,13 @@ import (
 func init() {
 	e := echo.New()
 	e.Pre(middleware.RemoveTrailingSlash())
-  e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{
 			"https://authoring.teraconnect.org",
-//			"https://teraconnect-authoring-development-dot-teraconnect-209509.appspot.com",
-//			"http://localhost:1234",
-    },
-  }))
+			//			"https://teraconnect-authoring-development-dot-teraconnect-209509.appspot.com",
+			//			"http://localhost:1234",
+		},
+	}))
 
 	e.GET("/avatars", avatar.Gets)
 
