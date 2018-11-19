@@ -18,9 +18,9 @@ handlers:
   static_files: static/robots.txt
   upload: static/robots.txt
 
-- url: /(.*\.(js|css|png|jpg|map))$
+- url: /(.*\.(js|css|png|jpg|map|woff2|wasm))$
   static_files: static/teraconnect/\1
-  upload: static/teraconnect/.*\.(js|css|png|jpg|map)$
+  upload: static/teraconnect/.*\.(js|css|png|jpg|map|woff2|wasm)$
   secure: always
 
 - url: /.*
