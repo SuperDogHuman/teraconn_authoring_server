@@ -18,10 +18,16 @@ handlers:
   static_files: static/robots.txt
   upload: static/robots.txt
 
-- url: /(.*\.(js|css|png|jpg|map|woff2|wasm))$
+- url: /(.*\.(js|css|png|jpg|map|woff2))$
   static_files: static/teraconnect/\1
-  upload: static/teraconnect/.*\.(js|css|png|jpg|map|woff2|wasm)$
+  upload: static/teraconnect/.*\.(js|css|png|jpg|map|woff2)$
   secure: always
+
+- url: /(.*\.wasm)$
+  static_files: static/teraconnect/\1
+  upload: static/teraconnect/.*\.wasm$
+  secure: always
+  mime_type: application/wasm
 
 - url: /.*
   static_files: static/teraconnect/index.html
