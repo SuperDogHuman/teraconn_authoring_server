@@ -1,2 +1,2 @@
 ### deploy command
-- `gcloud functions deploy fooFunction --trigger-http --runtime nodejs8`
+- `gcloud functions deploy fooFunction --trigger-bucket bar_bucket_dev --region asia-northeast1 --runtime nodejs10
