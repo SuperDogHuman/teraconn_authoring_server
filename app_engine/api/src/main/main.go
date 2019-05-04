@@ -11,12 +11,12 @@ import (
 	"rawVoice"
 	"storageObject"
 
-	"github.com/dgrijalva/jwt-go"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"google.golang.org/appengine"
 )
 
-func init() {
+func main() {
 	e := echo.New()
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -27,28 +27,32 @@ func init() {
 		},
 	}))
 
-	e.GET("/avatars", avatar.Gets)
-
-	e.GET("/graphics", graphic.Gets)
-
 	e.GET("/lessons", lesson.Gets)
 	e.GET("/lessons/:id", lesson.Get)
-	e.POST("/lessons", lesson.Create)
-	e.PATCH("/lessons/:id", lesson.Update)
-	e.DELETE("/lessons/:id", lesson.Destroy)
 
-	e.GET("/lessons/:id/materials", lessonMaterial.Gets)
-	e.POST("/lessons/:id/materials", lessonMaterial.Put)
-	e.PUT("/lessons/:id/materials", lessonMaterial.Put) // same function as POST
+	auth := e.Group("", middleware.JWT([]byte("secret")))
 
-	e.GET("/lessons/:id/voice_texts", lessonVoiceText.Gets)
+	auth.GET("/avatars", avatar.Gets)
 
-	e.PUT("/lessons/:id/packs", lessonPack.Update)
+	auth.GET("/graphics", graphic.Gets)
 
-	e.GET("/storage_objects", storageObject.Gets)
-	e.POST("/storage_objects", storageObject.Posts)
+	auth.POST("/lessons", lesson.Create)
+	auth.PATCH("/lessons/:id", lesson.Update)
+	auth.DELETE("/lessons/:id", lesson.Destroy)
 
-	e.POST("/raw_voices", rawVoice.Post)
+	auth.GET("/lessons/:id/materials", lessonMaterial.Gets)
+	auth.POST("/lessons/:id/materials", lessonMaterial.Put)
+	auth.PUT("/lessons/:id/materials", lessonMaterial.Put) // same function as POST
+
+	auth.GET("/lessons/:id/voice_texts", lessonVoiceText.Gets)
+
+	auth.PUT("/lessons/:id/packs", lessonPack.Update)
+
+	auth.GET("/storage_objects", storageObject.Gets)
+	auth.POST("/storage_objects", storageObject.Posts)
+
+	auth.POST("/raw_voices", rawVoice.Post)
 
 	http.Handle("/", e)
+	appengine.Main()
 }

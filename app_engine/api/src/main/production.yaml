@@ -1,12 +1,7 @@
 service:     teraconnect-api
-api_version: go1
-runtime:     go
-threadsafe:  true # unnecessary?
+runtime:     go111
 
 handlers:
 - url: /.*
-  script: _go_app
+  script: auto
   secure: always
-
-skip_files:
-- ^(.*/)?\..*$

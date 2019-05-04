@@ -5,7 +5,7 @@ import (
 	"lessonType"
 	"net/http"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
