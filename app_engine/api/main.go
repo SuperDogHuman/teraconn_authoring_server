@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/SuperDogHuman/teraconnect_api"
+	"github.com/SuperDogHuman/teraconnectgo"
 )
 
 func main() {
