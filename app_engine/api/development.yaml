@@ -1,7 +1,9 @@
-service:     teraconnect-api-development
-runtime:     go111
+service: teraconnect-api-development
+runtime: go111
+env_variables:
+  APP_ENV: "development"
 
 handlers:
-- url: /.*
-  script: auto
-  secure: always
+  - url: /.*
+    script: auto
+    secure: always

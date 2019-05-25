@@ -2,7 +2,7 @@ module teraconnect_api
 
 require (
 	cloud.google.com/go v0.38.0 // indirect
-	github.com/SuperDogHuman/teraconnect_api v0.0.0-20190506131655-a0255b4db829
+	github.com/SuperDogHuman/teraconnectgo v0.0.0-20190506131655-a0255b4db829
 	github.com/golang/mock v1.3.0 // indirect
 	github.com/google/btree v1.0.0 // indirect
 	github.com/google/go-cmp v0.3.0 // indirect
