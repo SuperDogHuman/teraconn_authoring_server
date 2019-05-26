@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	if appEnv := os.Getenv("APP_ENV"); v != "" {
+	if appEnv := os.Getenv("APP_ENV"); appEnv != "" {
 		teraconnectgo.Main(appEnv)
 	}
 }
