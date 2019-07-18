@@ -184,7 +184,7 @@ function uploadToStorage(bucketName, localFilePath, remoteFilePath) {
 
 function recordVoiceInfo(fileID, info) {
     const transaction = datastore.transaction();
-    const key         = datastore.key(['LessonVoiceText', fileID]);
+    const key         = datastore.key(['RawVoiceText', fileID]);
     return transaction.run()
         .then((data) => {
             return transaction.get(key);

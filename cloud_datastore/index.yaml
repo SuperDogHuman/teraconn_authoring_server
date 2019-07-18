@@ -1,6 +1,6 @@
 indexes:
 
-- kind: LessonVoiceText
+- kind: RawVoiceText
   properties:
     - name: LessonID
     - name: FileID
