@@ -1,10 +1,8 @@
-service:     teraconnect-authoring-development
-api_version: go1
-runtime:     go
-threadsafe:  true # unnecessary?
+runtime:     nodejs12
+
+service:     teraconnect-front
 
 handlers:
-
 - url: /favicon.ico
   static_files: static/favicon.ico
   upload: static/favicon.ico
