@@ -1,7 +1,7 @@
-service: teraconnect-api-development
-runtime: go111
+service: teraconnect-api
+runtime: go
 env_variables:
-  APP_ENV: "staging"
+  APP_ENV: "development"
 
 handlers:
   - url: /.*

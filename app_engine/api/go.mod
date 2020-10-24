@@ -1,5 +1,7 @@
 module teraconnect_api
 
+go 1.14
+
 require (
 	cloud.google.com/go v0.38.0 // indirect
 	github.com/SuperDogHuman/teraconnectgo v0.0.0-20190506131655-a0255b4db829

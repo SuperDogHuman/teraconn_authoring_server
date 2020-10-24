@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/SuperDogHuman/teraconnectgo"
+	"github.com/super-dog-human/teraconnectgo"
 )
 
 func main() {
