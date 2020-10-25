@@ -8,12 +8,16 @@ $ go get -u
 
 ### deploy in local
 ```bash
-$ dev_appserver.py development/app.yaml --log_level=debug
+$ dev_appserver.py development.yaml --log_level=debug
 ```
 
 ### deploy to Server
 ```bash
 $ gcloud components update
-$ gcloud app deploy staging/app.yaml -v dev0
-$ gcloud app deploy production/app.yaml
+
+$ gcloud config set project teraconnect-staging
+$ gcloud app deploy staging.yaml -v dev0
+
+$ gcloud config set project teraconnect
+$ gcloud app deploy production.yaml
 ```
