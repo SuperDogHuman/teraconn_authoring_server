@@ -1,4 +1,5 @@
 ### setup development environment
+
 ```bash
 $ brew install goenv
 $ goenv install 1.14.10
@@ -6,12 +7,8 @@ $ goenv local 1.14.10
 $ go get -u
 ```
 
-### deploy in local
-```bash
-$ dev_appserver.py development.yaml --log_level=debug
-```
+### Deploy to App Engine
 
-### deploy to Server
 ```bash
 $ gcloud components update
 

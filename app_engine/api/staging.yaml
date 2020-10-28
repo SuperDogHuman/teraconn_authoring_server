@@ -2,8 +2,3 @@ service: teraconnect-api
 runtime: go114
 env_variables:
   APP_ENV: "staging"
-
-handlers:
-  - url: /.*
-    script: auto
-    secure: always
