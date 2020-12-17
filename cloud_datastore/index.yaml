@@ -4,3 +4,7 @@ indexes:
   properties:
     - name: LessonID
     - name: FileID
+- kind: JapaneseCategory
+  ancestor: yes
+  properties:
+    - name: SortID
