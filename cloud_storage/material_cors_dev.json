@@ -2,7 +2,7 @@
     {
       "origin": ["http://localhost:1234/", "http://lvh.me:3000/"],
       "responseHeader": ["Content-Type"],
-      "method": ["GET", "OPTIONS", "PUT"],
+      "method": ["GET", "PUT"],
       "maxAgeSeconds": 3600
     }
 ]
