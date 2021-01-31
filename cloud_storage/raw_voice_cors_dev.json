@@ -1,6 +1,6 @@
 [
     {
-      "origin": ["http://localhost:1234/", "https://teraconnect-authoring-development-dot-teraconnect-209509.appspot.com/"],
+      "origin": ["http://localhost:1234/", "https://lvh.me:3000/"],
       "responseHeader": ["Content-Type"],
       "method": ["PUT"],
       "maxAgeSeconds": 3600
