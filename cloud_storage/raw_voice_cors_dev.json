@@ -1,8 +1,0 @@
-[
-    {
-      "origin": ["http://localhost:1234/", "https://lvh.me:3000/"],
-      "responseHeader": ["Content-Type"],
-      "method": ["PUT"],
-      "maxAgeSeconds": 3600
-    }
-]
