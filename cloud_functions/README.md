@@ -1,2 +1,5 @@
 ### deploy command
-- `gcloud functions deploy fooFunction --trigger-bucket bar_bucket_dev --region asia-northeast1 --runtime nodejs10
+
+```
+gcloud functions deploy Mp3SpeechToText --runtime go111 --trigger-resource teraconn_material_development --trigger-event google.storage.object.finalize --memory 256 --timeout 540 --region asia-northeast1
+```
