@@ -42,8 +42,7 @@ func Mp3SpeechToText(ctx context.Context, e GCSEvent) error {
 		return nil // ファイルの更新時は何もしない
 	}
 
-	fileName := strings.TrimLeft(e.Name, "voice/")
-	voiceID, err := strconv.ParseInt(strings.TrimRight(fileName, ".mp3"), 10, 64)
+	voiceID, err := strconv.ParseInt(strings.TrimRight(e.Name[strings.LastIndex(e.Name, "/")+1:], ".mp3"), 10, 64)
 	if err != nil {
 		return err
 	}
