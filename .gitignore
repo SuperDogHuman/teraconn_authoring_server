@@ -1,7 +1,4 @@
 .DS_Store
+*.pem
 *.swp
-*/node_modules/
-*/yarn-error.log
-app_engine/api/go.sum
-app_engine/api/teraconnect_api
-app_engine/authoring/static/teraconnect
+app_engine/go.sum
