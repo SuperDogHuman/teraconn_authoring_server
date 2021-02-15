@@ -1,6 +1,6 @@
 [
     {
-      "origin": ["https://lvh.me:3000/"],
+      "origin": ["https://teraconnect-staging.an.r.appspot.com/"],
       "responseHeader": ["Content-Type"],
       "method": ["GET", "PUT"],
       "maxAgeSeconds": 3600
