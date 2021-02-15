@@ -47,7 +47,7 @@ func Mp3SpeechToText(ctx context.Context, e GCSEvent) error {
 		return err
 	}
 
-	datastoreClient, err := datastore.NewClient(ctx, os.Getenv("GCP_PROJECT"))
+	datastoreClient, err := datastore.NewClient(ctx, os.Getenv("PROJECT_ID"))
 	if err != nil {
 		return err
 	}
@@ -96,7 +96,7 @@ func getVoiceFromCloudStorage(ctx context.Context, client *datastore.Client, key
 }
 
 func updateVoiceToCloudStorage(ctx context.Context, client *datastore.Client, key *datastore.Key, voice *Voice) error {
-	datastoreClient, err := datastore.NewClient(ctx, os.Getenv("GCP_PROJECT"))
+	datastoreClient, err := datastore.NewClient(ctx, os.Getenv("PROJECT_ID"))
 	voice.IsTexted = true
 	voice.Updated = time.Now()
 	_, err = datastoreClient.Put(ctx, key, voice)
