@@ -1,4 +1,4 @@
 .DS_Store
 *.pem
 *.swp
-app_engine/go.sum
+*go.sum
