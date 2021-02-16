@@ -11,6 +11,7 @@ $ go get -u
 
 ```bash
 $ gcloud components update
+$ go get -u github.com/super-dog-human/teraconnectgo
 
 $ gcloud config set project teraconnect-staging
 $ gcloud app deploy staging.yaml -v dev0
