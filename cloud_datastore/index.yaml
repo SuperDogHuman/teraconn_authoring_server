@@ -10,11 +10,12 @@ indexes:
     - name: IsPublic
     - name: Created
       direction: desc
-- kind: RawVoiceText
-  properties:
-    - name: LessonID
-    - name: FileID
 - kind: JapaneseCategory
   ancestor: yes
   properties:
     - name: SortID
+- kind: LessonMaterial
+  ancestor: yes
+  properties:
+    - name: Created
+      direction: desc
