@@ -19,3 +19,7 @@ indexes:
   properties:
     - name: Created
       direction: desc
+- kind: Voice
+  ancestor: yes
+  properties:
+    - name: Elapsedtime
