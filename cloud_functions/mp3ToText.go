@@ -23,7 +23,6 @@ type GCSEvent struct {
 
 type Voice struct {
 	UserID      int64     `json:"userID"`
-	LessonID    int64     `json:"lessonID"`
 	Elapsedtime float32   `json:"elapsedtime"`
 	DurationSec float32   `json:"durationSec"`
 	Text        string    `json:"text"`
@@ -42,7 +41,7 @@ func Mp3SpeechToText(ctx context.Context, e GCSEvent) error {
 		return nil // ファイルの更新時は何もしない
 	}
 
-	voiceID, err := strconv.ParseInt(strings.TrimRight(e.Name[strings.LastIndex(e.Name, "/")+1:], ".mp3"), 10, 64)
+	voiceID, err := voiceID(e.Name)
 	if err != nil {
 		return err
 	}
@@ -52,8 +51,14 @@ func Mp3SpeechToText(ctx context.Context, e GCSEvent) error {
 		return err
 	}
 
+	lessonID, err := lessonID(e.Name)
+	if err != nil {
+		return err
+	}
+
 	var voice Voice
-	key := datastore.IDKey("Voice", voiceID, nil)
+	ancestor := datastore.IDKey("Lesson", lessonID, nil)
+	key := datastore.IDKey("Voice", voiceID, ancestor)
 	err = getVoiceFromCloudStorage(ctx, datastoreClient, key, &voice)
 	if err != nil {
 		return err
@@ -63,7 +68,7 @@ func Mp3SpeechToText(ctx context.Context, e GCSEvent) error {
 		return nil
 	}
 
-	if voice.DurationSec < 1.0 {
+	if voice.DurationSec < 0.5 {
 		// 音声が短すぎるときは、処理済みのフラグだけ立てて終了する
 		updateVoiceToCloudStorage(ctx, datastoreClient, key, &voice)
 		if err != nil {
@@ -86,6 +91,14 @@ func Mp3SpeechToText(ctx context.Context, e GCSEvent) error {
 	}
 
 	return nil
+}
+
+func voiceID(fullFilePath string) (int64, error) {
+	return strconv.ParseInt(strings.TrimRight(fullFilePath[strings.LastIndex(fullFilePath, "/")+1:], ".mp3"), 10, 64)
+}
+
+func lessonID(fullFilePath string) (int64, error) {
+	return strconv.ParseInt(fullFilePath[strings.Index(fullFilePath, "/")+1:strings.LastIndex(fullFilePath, "/")], 10, 64)
 }
 
 func getVoiceFromCloudStorage(ctx context.Context, client *datastore.Client, key *datastore.Key, voice *Voice) error {
