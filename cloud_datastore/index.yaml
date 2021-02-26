@@ -10,6 +10,10 @@ indexes:
     - name: IsPublic
     - name: Created
       direction: desc
+- kind: Graphic
+  properties:
+  - name: LessonID
+  - name: Created
 - kind: JapaneseCategory
   ancestor: yes
   properties:
