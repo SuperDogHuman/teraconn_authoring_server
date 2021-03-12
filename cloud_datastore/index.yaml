@@ -26,4 +26,5 @@ indexes:
 - kind: Voice
   ancestor: yes
   properties:
+    - name: IsSynthesis
     - name: Elapsedtime
