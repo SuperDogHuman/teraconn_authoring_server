@@ -23,7 +23,7 @@ type GCSEvent struct {
 
 type Voice struct {
 	UserID      int64     `json:"userID"`
-	Elapsedtime float32   `json:"elapsedtime"`
+	ElapsedTime float32   `json:"elapsedTime"`
 	DurationSec float32   `json:"durationSec"`
 	Text        string    `json:"text"`
 	IsTexted    bool      `json:"isTexted"`

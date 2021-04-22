@@ -27,4 +27,4 @@ indexes:
   ancestor: yes
   properties:
     - name: IsSynthesis
-    - name: Elapsedtime
+    - name: ElapsedTime
