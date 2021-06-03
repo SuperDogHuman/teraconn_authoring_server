@@ -10,6 +10,15 @@ indexes:
     - name: IsPublic
     - name: Created
       direction: desc
+- kind: BackgroundMusic
+  ancestor: yes
+  properties:
+    - name: Created
+      direction: desc
+- kind: BackgroundMusic
+  properties:
+    - name: IsPublic
+    - name: SortID
 - kind: Graphic
   properties:
   - name: LessonID
