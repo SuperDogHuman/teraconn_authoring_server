@@ -1,0 +1,8 @@
+[
+    {
+      "origin": ["https://teraconnect-staging.an.r.appspot.com/"],
+      "responseHeader": ["Content-Type"],
+      "method": ["GET"],
+      "maxAgeSeconds": 3600
+    }
+]
