@@ -1,6 +1,6 @@
 [
     {
-      "origin": ["https://lvh.me:3000/"],
+      "origin": ["https://dev.teraconnect.org:3000/"],
       "responseHeader": ["Content-Type"],
       "method": ["GET", "PUT"],
       "maxAgeSeconds": 3600
