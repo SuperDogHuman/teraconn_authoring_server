@@ -27,6 +27,11 @@ indexes:
   ancestor: yes
   properties:
     - name: SortID
+- kind: Lesson
+  properties:
+  - name: UserID
+  - name: Created
+    direction: desc
 - kind: LessonMaterial
   ancestor: yes
   properties:
